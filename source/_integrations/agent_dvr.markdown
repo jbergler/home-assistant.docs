@@ -13,12 +13,12 @@ ha_domain: agent_dvr
 ha_platforms:
   - alarm_control_panel
   - camera
-ha_integration_type: integration
+ha_integration_type: hub
 ---
 
 [Agent DVR](https://www.ispyconnect.com/download.aspx/) is a free* software DVR solution for Windows 10, Mac and Linux. Agent DVR runs as a service or console application and can access and control a huge range of third party cameras with advanced motion detection, including DeepStack integration for object recognition. The iSpyConnect website provides secured (SSL) remote access without port forwarding needed.
 
-You can add Agent DVR via integrations using the IP address and port of the server, e.g.,: `http://192.168.1.3:8090/`.
+You can add Agent DVR via integrations using the IP address and port of the server, like: `http://192.168.1.3:8090/`. If you have "Protect API" turned on in your Agent DVR server configuration, you can supply the username and password as part of the URL, for example, `http://username:password@192.168.1.3:8090`.
 
 {% include integrations/config_flow.md %}
 
@@ -39,25 +39,25 @@ Available actions:
 `start_recording`, `stop_recording`,
 `turn_on`, `turn_off`, `toggle`, `enable_motion_detection`,`disable_motion_detection`
 
-### Action `enable_alerts`/`disable_alerts`
+### Action: Enable alerts / disable alerts
 
-These actions enable or disable the device's alert events within Agent DVR.
-
-Data attribute | Optional | Description
--|-|-
-`entity_id` | no | Name(s) of entities, e.g., `camera.living_room_camera`.
-
-### Action `start_recording`/`stop_recording`
-
-These actions start or stop the device recording.
+The `agent_dvr.enable_alerts` and `agent_dvr.disable_alerts` actions are used to enable or disable the device's alert events within Agent DVR.
 
 Data attribute | Optional | Description
 -|-|-
 `entity_id` | no | Name(s) of entities, e.g., `camera.living_room_camera`.
 
-### Action `turn_on`/`turn_off`/`toggle`
+### Action: Start recording / stop recording
 
-These actions turn on, off or toggle the device enabled state within Agent DVR
+The `agent_dvr.start_recording` and `agent_dvr.stop_recording` actions are used to start or stop the device recording.
+
+Data attribute | Optional | Description
+-|-|-
+`entity_id` | no | Name(s) of entities, e.g., `camera.living_room_camera`.
+
+### Action: Turn on / turn off / toggle
+
+The `agent_dvr.turn_on`, `agent_dvr.turn_off`, and `agent_dvr.toggle` actions are used to turn on, off or toggle the device enabled state within Agent DVR.
 
 Data attribute | Optional | Description
 -|-|-

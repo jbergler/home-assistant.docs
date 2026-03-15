@@ -11,6 +11,7 @@ ha_quality_scale: internal
 ha_domain: history_stats
 ha_config_flow: true
 ha_platforms:
+  - diagnostics
   - sensor
 ha_integration_type: helper
 related:
@@ -47,6 +48,10 @@ End:
   description: When to stop the measure (timestamp or datetime). Can be a template.
 Duration:
   description: Duration of the measure.
+State class:
+  description: The [state_class](https://developers.home-assistant.io/docs/core/entity/sensor#available-state-classes) of the sensor.
+Minimum duration of measurement:
+  description: Minimum duration of the measurement to be considered for calculations (defaults to 0, all measurements will be included). Useful to exclude short state changes from the statistics.
 {% endconfiguration_basic %}
 
 ## YAML Configuration
@@ -105,6 +110,16 @@ duration:
   description: Duration of the measure.
   required: false
   type: time
+state_class:
+  description: "[state_class](https://developers.home-assistant.io/docs/core/entity/sensor#available-state-classes) of the sensor. May be `null`, `measurement`, or `total_increasing` (not allowed for `ratio` type)."
+  required: false
+  default: measurement
+  type: string
+min_state_duration:
+  description: Minimum duration of the measurement to be considered for calculations. Used as a filter to remove short state changes from statistics.
+  required: false
+  default: 0
+  type: time
 {% endconfiguration %}
 
 {% note %}
@@ -121,7 +136,11 @@ Depending on the sensor type you choose, the `history_stats` integration can sho
 
 - **time**: The default value, which is the tracked time, in hours
 - **ratio**: The tracked time divided by the length of your period, as a percentage
-- **count**: How many times the tracked entity matched the configured state during the time period
+- **count**: How many times the tracked entity matched the configured state during the time period. This will count states (for example, how many times a light was in the `on` state during the time period), as opposed to counting state transitions (for example, how many times a light was *turned* `on`). The difference is if the entity was already in the desired state at the start of the time period, that scenario will be counted with this sensor type. If a list of states is provided to the state option, transitions between defined states are considered all part of a single event and do not increment the count.
+
+{% note %}
+For a **time** or **count** sensor that uses a time period that does not slide (such as one that resets upon each hour, as opposed to one which considers the trailing 60 minutes), set the `state_class` to `total_increasing` to generate statistics that track the `sum`. This is useful when emulating the behavior of a `utility_meter` helper that has a defined reset cycle.
+{% endnote %}
 
 ## Time periods
 
@@ -158,12 +177,25 @@ duration:
 If the duration exceeds the number of days of history stored by the `recorder` integration (`purge_keep_days`), the history statistics sensor will not have all the information it needs to look at the entire duration. For example, if `purge_keep_days` is set to 7, a history statistics sensor with a duration of 30 days will only report a value based on the last 7 days of history.
 {% endnote %}
 
-### Video tutorial
+{% note %}
+The history stats sensor will be updated when the source entity changes or once per minute if there is no source change. Keep this in mind when using fixed durations that aren't evenly divisible by one minute.
+{% endnote %}
+
+## Minimum state duration
+
+The minimum state duration variable is used to exclude short state changes from the statistics. In this example state changes shorter than 2 minutes will be excluded from statistics. It can be useful for instance to exclude short disconnections of a device. 
+
+```yaml
+# 2 minutes
+min_state_duration: "00:02:00"
+```
+
+## Video tutorial
 This video tutorial explains how you can use history stats. It also shows how you can create a daily bar chart graph to visualize things such as occupancy, or how long the lights are on in a particular room.
 
 <lite-youtube videoid="BMlU4SynQBY" videotitle="How To Master Graphs to Monitor Occupancy and Device Usage in Home Assistant" posterquality="maxresdefault"></lite-youtube>
 
-### Examples
+## Examples
 
 Here are some examples of periods you could work with, and what to write in your {% term "`configuration.yaml`" %}:
 
@@ -172,8 +204,9 @@ Here are some examples of periods you could work with, and what to write in your
 {% raw %}
 
 ```yaml
-    start: "{{ today_at() }}"
+    start: "{{ today_at('00:00') }}"
     end: "{{ now() }}"
+    state_class: total_increasing
 ```
 
 {% endraw %}
@@ -183,7 +216,7 @@ Here are some examples of periods you could work with, and what to write in your
 {% raw %}
 
 ```yaml
-    end: "{{ today_at() }}"
+    end: "{{ today_at('00:00') }}"
     duration:
       hours: 24
 ```
@@ -209,7 +242,7 @@ Here, last Monday is today at 00:00, minus the current weekday (the weekday is 0
 {% raw %}
 
 ```yaml
-    start: "{{ today_at() - timedelta(days=now().weekday()) }}"
+    start: "{{ today_at('00:00') - timedelta(days=now().weekday()) }}"
     end: "{{ now() }}"
 ```
 
@@ -220,7 +253,7 @@ Here, last Monday is today at 00:00, minus the current weekday (the weekday is 0
 {% raw %}
 
 ```yaml
-    start: "{{ today_at().replace(day=1) }}"
+    start: "{{ today_at('00:00').replace(day=1) }}"
     end: "{{ now() }}"
 ```
 
@@ -231,8 +264,8 @@ Here, last Monday is today at 00:00, minus the current weekday (the weekday is 0
 {% raw %}
 
 ```yaml
-    start: "{{ (today_at().replace(day=1) - timedelta(days=1)).replace(day=1) }}"
-    end: "{{ today_at().replace(day=1) }}"
+    start: "{{ (today_at('00:00').replace(day=1) - timedelta(days=1)).replace(day=1) }}"
+    end: "{{ today_at('00:00').replace(day=1) }}"
 ```
 
 {% endraw %}
@@ -254,7 +287,7 @@ Here, last Monday is today at 00:00, minus the current weekday (the weekday is 0
 {% raw %}
 
 ```yaml
-    end: "{{ today_at() }}"
+    end: "{{ today_at('00:00') }}"
     duration:
       days: 30
 ```

@@ -9,10 +9,10 @@ ha_domain: google_translate
 ha_platforms:
   - tts
 ha_config_flow: true
-ha_integration_type: integration
+ha_integration_type: service
 ---
 
-The `google_translate` text-to-speech platform uses the unofficial [Google Translate text-to-speech engine](https://translate.google.com/) to read a text with natural sounding voices. Contrary to what the name suggests, the integration only does text-to-speech and does not translate messages sent to it.
+The **Google Translate text-to-speech** {% term integration %} uses the unofficial [Google Translate text-to-speech engine](https://translate.google.com/) to read a text with natural sounding voices. Contrary to what the name suggests, the integration only does text-to-speech and does not translate messages sent to it.
 
 {% include integrations/config_flow.md %}
 
@@ -115,7 +115,7 @@ You can also use supported BCP 47 tags like the below or the 2-2 digit format fo
 
 ## Action speak
 
-The `tts.speak` actiion is the modern way to use Google translate TTS action. Add the `speak` action, select the entity for your Google translate TTS (it's named for the language you created it with), select the media player entity or group to send the TTS audio to, and enter the message to speak.
+The `tts.speak` action is the modern way to use Google translate TTS action. Add the `speak` action, select the entity for your Google translate TTS (it's named for the language you created it with), select the media player entity or group to send the TTS audio to, and enter the message to speak.
 
 For more options about `speak`, see the Speak section on the main [TTS](/integrations/tts/#action-speak) building block page.
 

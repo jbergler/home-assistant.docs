@@ -9,9 +9,10 @@ ha_codeowners:
   - '@tkislan'
 ha_domain: minio
 ha_integration_type: integration
+ha_quality_scale: legacy
 ---
 
-This integration adds interaction with [Minio](https://min.io).
+This {% term integration %} adds interaction with [Minio](https://min.io).
 It also enables listening for bucket notifications: [see documentation](https://docs.min.io/docs/minio-client-complete-guide.html#watch)
 
 To download or upload files, folders must be added to [allowlist_external_dirs](/integrations/homeassistant/#allowlist_external_dirs).
@@ -88,12 +89,12 @@ Automations can be triggered on new files created on the Minio server using the 
 #Automatically upload new local files
 automation:
 - alias: "Upload camera snapshot"
-  trigger:
-    platform: event
-    event_type: folder_watcher
-    event_data:
-      event_type: created
-  action:
+  triggers:
+    - trigger: event
+      event_type: folder_watcher
+      event_data:
+        event_type: created
+  actions:
     - delay: "00:00:01"
     - action: minio.put
       data:
@@ -106,17 +107,17 @@ automation:
         file: "{{ trigger.event.data.path }}"
 
 - alias: "Download new Minio file"
-  trigger:
-  - platform: event
-    event_type: minio
+  triggers:
+    - trigger: event
+      event_type: minio
 
-  condition: []
-  action:
-  - action: minio.get
-    data:
-      bucket: "{{trigger.event.data.bucket}}"
-      key: "{{trigger.event.data.key}}"
-      file_path: "/tmp/{{ trigger.event.data.file_name }}"
+  conditions: []
+  actions:
+    - action: minio.get
+      data:
+        bucket: "{{trigger.event.data.bucket}}"
+        key: "{{trigger.event.data.key}}"
+        file_path: "/tmp/{{ trigger.event.data.file_name }}"
 ```
 
 {% endraw %}
@@ -129,19 +130,9 @@ These actions are provided:
 - `put`
 - `remove`
 
-### Action `minio.get`
+### Action: Get
 
-Download file.
-
-| Data attribute | Required | Description                        |
-| ---------------------- | -------- | ---------------------------------- |
-| `bucket`               | yes      | Bucket to use                      |
-| `key`                  | yes      | Object key of the file             |
-| `file_path`            | yes      | File path on the local file system |
-
-### Action `minio.put`
-
-Upload file.
+The `minio.get` action downloads a file from Minio storage.
 
 | Data attribute | Required | Description                        |
 | ---------------------- | -------- | ---------------------------------- |
@@ -149,9 +140,19 @@ Upload file.
 | `key`                  | yes      | Object key of the file             |
 | `file_path`            | yes      | File path on the local file system |
 
-### Action `minio.remove`
+### Action: Put
 
-Delete file.
+The `minio.put` action uploads a file to Minio storage.
+
+| Data attribute | Required | Description                        |
+| ---------------------- | -------- | ---------------------------------- |
+| `bucket`               | yes      | Bucket to use                      |
+| `key`                  | yes      | Object key of the file             |
+| `file_path`            | yes      | File path on the local file system |
+
+### Action: Remove
+
+The `minio.remove` action deletes a file from Minio storage.
 
 | Data attribute | Required | Description            |
 | ---------------------- | -------- | ---------------------- |

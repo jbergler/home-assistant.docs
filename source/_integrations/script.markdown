@@ -11,7 +11,7 @@ ha_domain: script
 ha_integration_type: system
 ---
 
-The script integration allows users to specify a sequence of actions to be executed by Home Assistant. These are run when you turn the script on. The script integration will create an entity for each script and allow them to be controlled via actions.
+The **Scripts** {% term integration %} allows users to specify a sequence of actions to be executed by Home Assistant. These are run when you turn the script on. The script integration will create an entity for each script and allow them to be controlled via actions.
 
 Scripts can be created via YAML configuration (described below) or via {% my scripts title="the UI" %}.
 
@@ -77,7 +77,7 @@ fields:
           description: The name of this script parameter field.
           type: string
         description:
-          description: A description of this of this script parameter.
+          description: A description of this script parameter.
           type: string
         advanced:
           description: Marks this field as an advanced parameter. This causes it only to be shown in the UI, when the user has advanced mode enabled.
@@ -176,16 +176,16 @@ Aside from the automation editor UI, variables can be passed to scripts within t
 ```yaml
 # Example configuration.yaml entry
 automation:
-  trigger:
-    platform: state
-    entity_id: light.bedroom
-    from: "off"
-    to: "on"
-  action:
-    action: script.notify_pushover
-    data:
-      title: "State change"
-      message: "The light is on!"
+  triggers:
+    - trigger: state
+      entity_id: light.bedroom
+      from: "off"
+      to: "on"
+  actions:
+    - action: script.notify_pushover
+      data:
+        title: "State change"
+        message: "The light is on!"
 ```
 {% endraw %}
 
@@ -195,19 +195,19 @@ This example shows using `script.turn_on` action:
 ```yaml
 # Example configuration.yaml entry
 automation:
-  trigger:
-    platform: state
-    entity_id: light.bedroom
-    from: "off"
-    to: "on"
-  action:
-    action: script.turn_on
-    target:
-      entity_id: script.notify_pushover
-    data:
-      variables:
-        title: "State change"
-        message: "The light is on!"
+  triggers:
+    - trigger: state
+      entity_id: light.bedroom
+      from: "off"
+      to: "on"
+  actions:
+    - action: script.turn_on
+      target:
+        entity_id: script.notify_pushover
+      data:
+        variables:
+          title: "State change"
+          message: "The light is on!"
 ```
 {% endraw %}
 

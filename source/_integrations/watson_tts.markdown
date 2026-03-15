@@ -14,9 +14,10 @@ ha_integration_type: integration
 related:
   - docs: /docs/configuration/
     title: Configuration file
+ha_quality_scale: legacy
 ---
 
-The `watson_tts` text-to-speech {% term integration %} that works with [IBM Watson Cloud](https://www.ibm.com/watson/services/text-to-speech/) to create the spoken output.
+The **IBM Watson TTS** text-to-speech {% term integration %} that works with [IBM Watson Cloud](https://www.ibm.com/watson/services/text-to-speech/) to create the spoken output.
 Watson is a paid service via IBM Cloud but there is a decent [free tier](https://www.ibm.com/cloud/watson-text-to-speech/pricing) which offers 10000 free characters every month.
 
 ## Setup

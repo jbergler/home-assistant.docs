@@ -20,34 +20,54 @@ water_heater:
   platform: demo
 ```
 
+{% warning %}
+
+ Misconfiguring Water Heater automations may allow water temperatures to drop into ranges between 25°C to 45°C (77°F and 113°F) which allows for Legionella bacteria growth. This can pose serious health risks, including death from Legionnaires' disease. Maintain water temperature ≥ 60°C (140°F) for bacterial safety.
+
+{% endwarning %}
+
+## The state of a water heater entity
+
+A water heater entity can have the following states:
+
+- **Eco**: Energy efficient mode, provides energy savings and fast heating.
+- **Electric**: Electric only mode. This mode uses the most energy.
+- **Performance**: High performance mode.
+- **High demand**: Meet high demands when the water heater is undersized.
+- **Heat pump**: Heat pump is the slowest to heat, but it uses less energy.
+- **Gas**: Gas only mode. This mode uses the most energy.
+- **Off**: The water heater is off.
+- **Unavailable**: The entity is currently unavailable.
+- **Unknown**: The state is not yet known.
+
 ## Actions
 
 ### Water heater control actions
 
-Available actions: `water_heater.set_temperature`, `water_heater.turn_away_mode_on`, `water_heater.turn_away_mode_off`, `water_heater.set_operation_mode`
+Available actions: `water_heater.set_temperature`, `water_heater.turn_away_mode_on`, `water_heater.turn_away_mode_off`, `water_heater.set_operation_mode`, `water_heater.turn_on`, `water_heater.turn_off`
 
 {% tip %}
-Not all water heater actions may be available for your platform. Be sure to check the available actions Home Assistant has enabled by checking **Developer Tools** > **Actions**.
+Not all water heater actions may be available for your platform. Be sure to check the available actions Home Assistant has enabled by checking {% my developer_services title="**Settings** > **Developer tools** > **Actions**" %}.
 {% endtip %}
 
-### Action `water_heater.set_temperature`
+### Action: Set temperature
 
-Sets target temperature of water heater device.
+The `water_heater.set_temperature` action sets the target temperature of the water heater device.
 
 | Data attribute | Optional | Description |
 | ---------------------- | -------- | ----------- |
-| `entity_id` | yes | String or list of strings that point at the `entity_id` of water heater devices to control. Use `entity_id: all` to target all.
-| `temperature` | no | New target temperature for water heater
-| `operation_mode` | yes | Operation mode to set the temperature to. This defaults to current_operation mode if not set, or set incorrectly. For a list of possible modes, refer to the {% term integration %} documentation.
+| `entity_id` | yes | String or list of strings that point at the `entity_id` of water heater devices to control. Use `entity_id: all` to target all. |
+| `temperature` | no | New target temperature for water heater |
+| `operation_mode` | yes | Operation mode to set the temperature to. This defaults to current_operation mode if not set, or set incorrectly. For a list of possible modes, refer to the {% term integration %} documentation. |
 
 #### Automation example
 
 ```yaml
 automation:
-  trigger:
-    platform: time
-    at: "07:15:00"
-  action:
+  triggers:
+    - trigger: time
+      at: "07:15:00"
+  actions:
     - action: water_heater.set_temperature
       target:
         entity_id: water_heater.demo
@@ -56,23 +76,23 @@ automation:
         operation_mode: eco
 ```
 
-### Action `water_heater.set_operation_mode`
+### Action: Set operation mode
 
-Set operation mode for water heater device
+The `water_heater.set_operation_mode` action sets the operation mode for the water heater device.
 
 | Data attribute | Optional | Description |
 | ---------------------- | -------- | ----------- |
-| `entity_id` | yes | String or list of strings that point at the `entity_id` of water heater devices to control. Use `entity_id: all` to target all.
-| `operation_mode` | no | New value of operation mode. For a list of possible modes, refer to the integration documentation.
+| `entity_id` | yes | String or list of strings that point at the `entity_id` of water heater devices to control. Use `entity_id: all` to target all. |
+| `operation_mode` | no | New value of operation mode. For a list of possible modes, refer to the integration documentation. |
 
 #### Automation example
 
 ```yaml
 automation:
-  trigger:
-    platform: time
-    at: "07:15:00"
-  action:
+  triggers:
+    - trigger: time
+      at: "07:15:00"
+  actions:
     - action: water_heater.set_operation_mode
       target:
         entity_id: water_heater.demo
@@ -80,26 +100,42 @@ automation:
         operation_mode: eco
 ```
 
-### Action `water_heater.set_away_mode`
+### Action: Set away mode
 
-Turn away mode on or off for water heater device
+The `water_heater.set_away_mode` action turns away mode on or off for the water heater device.
 
 | Data attribute | Optional | Description |
 | ---------------------- | -------- | ----------- |
-| `entity_id` | yes | String or list of strings that point at the `entity_id` of water heater devices to control. Use `entity_id: all` to target all.
-| `away_mode` | no | New value of away mode. 'on'/'off' or True/False
+| `entity_id` | yes | String or list of strings that point at the `entity_id` of water heater devices to control. Use `entity_id: all` to target all. |
+| `away_mode` | no | New value of away mode. 'on'/'off' or True/False |
 
 #### Automation example
 
 ```yaml
 automation:
-  trigger:
-    platform: time
-    at: "07:15:00"
-  action:
+  triggers:
+    - trigger: time
+      at: "07:15:00"
+  actions:
     - action: water_heater.set_away_mode
       target:
         entity_id: water_heater.demo
       data:
         away_mode: true
 ```
+
+### Action: Turn on
+
+The `water_heater.turn_on` action turns the water heater device on.
+
+| Data attribute | Optional | Description |
+| ---------------------- | -------- | ----------- |
+| `entity_id` | yes | String or list of strings that define the entity ID(s) of water heater device(s) to control. To target all water heater devices, use `all`. |
+
+### Action: Turn off
+
+The `water_heater.turn_off` action turns the water heater device off.
+
+| Data attribute | Optional | Description |
+| ---------------------- | -------- | ----------- |
+| `entity_id` | yes | String or list of strings that define the entity ID(s) of water heater device(s) to control. To target all water heater devices, use `all`. |

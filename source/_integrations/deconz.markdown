@@ -16,7 +16,6 @@ ha_category:
 ha_release: 0.61
 ha_iot_class: Local Push
 ha_config_flow: true
-ha_quality_scale: platinum
 ha_codeowners:
   - '@Kane610'
 ha_domain: deconz
@@ -58,16 +57,25 @@ There is currently support for the following device types within Home Assistant:
 
 ## Recommended way of running deCONZ
 
-An official add-on for deCONZ is available in the Home Assistant add-on store.
+An official deCONZ app for Home Assistant (formerly known as deCONZ add-on) is available in the Home Assistant app store.
 Otherwise, use [community container](https://github.com/deconz-community/deconz-docker) for your deCONZ needs.
 
 ### Supported devices
 
 See [deCONZ wiki](https://github.com/dresden-elektronik/deconz-rest-plugin/wiki/Supported-Devices) for a list of supported devices.
 
-{% include integrations/config_flow.md %}
+## Prerequisites
 
-Running a stand-alone instance of deCONZ (non add-on installation) requires a pairing between the deCONZ gateway and Home Assistant. To allow Home Assistant to connect with deCONZ go to the Phoscon UI select **Settings** > **Gateway** > **Advanced** and select the **Authenticate app** button. This same information is also shown during the config flow of the deCONZ integration.
+- If the adapter isn't discovered automatically by Home Assistant, and you add the integration manually, you need the hostname of deCONZ and the port.
+- If you are running the deCONZ app for Home Assistant, you can see the hostname on the app page under [**Settings** > **App** > **deCONZ**](https://my.home-assistant.io/redirect/supervisor_addon/?addon=core_deconz), under **Hostname**.
+  - For example: `core-deconz`
+- If the suggested port does not work, try port `40850`.
+- Running a stand-alone instance of deCONZ (non-app installation) requires a pairing between the deCONZ gateway and Home Assistant:
+
+  - To allow Home Assistant to connect with deCONZ, go to the Phoscon UI, select **Settings** > **Gateway** > **Advanced** and select the **Authenticate app** button.
+    - This same information is also shown during the config flow of the deCONZ integration.
+
+{% include integrations/config_flow.md %}
 
 ## Debugging integration
 
@@ -172,7 +180,7 @@ Specific gestures for the Aqara Magic Cube are:
 
 ### Finding your events
 
-Navigate to **Developer tools->Events**. In the section **Listen to events** add `deconz_event` and press **START LISTENING**. All events from deCONZ will now be shown and by pushing your remote button while monitoring the log it should be fairly easy to find the events you are looking for.
+Go to {% my developer_events title="**Settings** > **Developer tools** > **Events**" %}. In the section **Listen to events** add `deconz_event` and press **START LISTENING**. All events from deCONZ will now be shown and by pushing your remote button while monitoring the log it should be fairly easy to find the events you are looking for.
 
 ### Device triggers
 
@@ -194,26 +202,26 @@ If you have a Zigbee remote that is not yet supported you can request support fo
 automation:
   - alias: "'Toggle lamp from dimmer'"
     initial_state: "on"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: deconz_event
         event_data:
           id: remote_control_1
           event: 1002
-    action:
+    actions:
       - action: light.toggle
         target:
           entity_id: light.lamp
 
   - alias: "Increase brightness of lamp from dimmer"
     initial_state: "on"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: deconz_event
         event_data:
           id: remote_control_1
           event: 2002
-    action:
+    actions:
       - action: light.turn_on
         target:
           entity_id: light.lamp
@@ -224,13 +232,13 @@ automation:
 
   - alias: "Decrease brightness of lamp from dimmer"
     initial_state: "on"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: deconz_event
         event_data:
           id: remote_control_1
           event: 3002
-    action:
+    actions:
       - action: light.turn_on
         target:
           entity_id: light.lamp
@@ -241,13 +249,13 @@ automation:
 
   - alias: 'Turn lamp on when turning cube clockwise'
     initial_state: "on"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: deconz_event
         event_data:
           id: remote_control_1
           gesture: 7
-    action:
+    actions:
       - action: light.turn_on
         target:
           entity_id: light.lamp
@@ -262,13 +270,13 @@ automation:
 ```yaml
 automation:
   - alias: "React to color wheel changes"
-    trigger:
-      - platform: event
+    triggers:
+      - trigger: event
         event_type: deconz_event
         event_data:
           id: tint_remote_1
           event: 6002
-    action:
+    actions:
       - action: light.turn_on
         data:
           xy_color:
@@ -287,12 +295,11 @@ Note: Requires `on: true` to change color while the Philips Hue bulb is off. If 
 ```yaml
 automation:
   - alias: "Flash Hue Bulb with Doorbell Motion"
-    mode: single
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: binary_sensor.doorbell_motion
         to: "on"
-    action:
+    actions:
       - action: deconz.configure
         data:
           entity: light.hue_lamp

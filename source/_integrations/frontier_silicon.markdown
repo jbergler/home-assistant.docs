@@ -8,7 +8,7 @@ ha_release: '0.40'
 ha_domain: frontier_silicon
 ha_platforms:
   - media_player
-ha_integration_type: integration
+ha_integration_type: device
 ha_codeowners:
   - '@wlcrs'
 ha_ssdp: true
@@ -49,15 +49,15 @@ In case your device (friendly name) is called *badezimmer*, an example automatio
 ```yaml
 # Example configuration.yaml automation
 alias: "Bathroom Motion Detected"
-trigger:
-  platform: state
-  entity_id: binary_sensor.motion_sensor_166d0001171111
-  from: "off"
-  to: "on"
-action:
-  action: media_player.turn_on
-  target:
-    entity_id: "media_player.badezimmer"
+triggers:
+  - trigger: state
+    entity_id: binary_sensor.motion_sensor_166d0001171111
+    from: "off"
+    to: "on"
+actions:
+  - action: media_player.turn_on
+    target:
+      entity_id: "media_player.badezimmer"
 ```
 
 ## Screenshots:

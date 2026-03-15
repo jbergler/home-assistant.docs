@@ -9,7 +9,7 @@ ha_domain: python_script
 ha_integration_type: integration
 ---
 
-This integration allows you to write Python scripts that are exposed as actions in Home Assistant. Each Python file created in the `<config>/python_scripts/` folder will be exposed as an action. The content is not cached so you can easily develop: edit file, save changes, perform action. The scripts are run in a sandboxed environment. The following variables are available in the sandbox:
+This {% term integration %} allows you to write Python scripts that are exposed as actions in Home Assistant. Each Python file created in the `<config>/python_scripts/` folder will be exposed as an action. The content is not cached so you can easily develop: edit file, save changes, perform action. The scripts are run in a sandboxed environment. The following variables are available in the sandbox:
 
 | Name       | Description                                                                                                                                |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -19,7 +19,7 @@ This integration allows you to write Python scripts that are exposed as actions 
 | `time`     | The stdlib `time` available as limited access.                                                                                             |
 | `datetime` | The stdlib `datetime` available as limited access.                                                                                         |
 | `dt_util`  | The ` homeassistant.util.dt` module.                                                                                                       |
-| `output`   | An empty dictionary. Add items to return data as [`response_variable`](/docs/scripts/service-calls#use-templates-to-handle-response-data). |
+| `output`   | An empty dictionary. Add items to return data as [`response_variable`](/docs/scripts/perform-actions#use-templates-to-handle-response-data). |
 
 Other imports like `min`, `max` are available as builtins. See the [python_script](https://github.com/home-assistant/core/blob/dev/homeassistant/components/python_script/__init__.py) source code for up-to-date information on the available objects inside the script.
   
@@ -28,7 +28,8 @@ Other imports like `min`, `max` are available as builtins. See the [python_scrip
 [logger-api]: https://docs.python.org/3.7/library/logging.html#logger-objects
 
 {% note %}
-It is not possible to use Python imports with this integration. If you want to do more advanced scripts, you can take a look at [AppDaemon](https://appdaemon.readthedocs.io/en/latest/) or [pyscript](https://github.com/custom-components/pyscript)
+ - It is not possible to use Python imports with this integration. If you want to do more advanced scripts, you can take a look at [AppDaemon](https://appdaemon.readthedocs.io/en/latest/) or [pyscript](https://github.com/custom-components/pyscript)
+ - It is not possible to include your script as a button on the dashboard. A workaround is to create a [helper button](/integrations/input_button/) and create automation to run your script when the button state changes.
 {% endnote %}
 
 ## Writing your first script, reading input and logging the activity
@@ -90,7 +91,7 @@ hass.bus.fire("hello_world_event", {"wow": "from a Python script!"})
 
 This script doesn't output anything. However, you can view the events being fired in the Developer tools.
 
-From a separate browser window or tab, go to `Developer Tools -> Events` and at `Listen to events` type `hello_world_event` and then press `Start listening`. You should see something like this:
+From a separate browser window or tab, go to `Developer tools -> Events` and at `Listen to events` type `hello_world_event` and then press `Start listening`. You should see something like this:
 
 ```yaml
 event_type: hello_world_event
@@ -137,7 +138,7 @@ current_forecast = hass.services.call("weather", "get_forecasts", service_data, 
 
 ## Returning data
 
-Python script itself can respond with data. Just add items to the `output` variable in your `python_script` and the whole dictionary will be returned. These can be used in automations to act upon the command results using [`response_variable`](/docs/scripts/service-calls#use-templates-to-handle-response-data).
+Python script itself can respond with data. Just add items to the `output` variable in your `python_script` and the whole dictionary will be returned. These can be used in automations to act upon the command results using [`response_variable`](/docs/scripts/perform-actions#use-templates-to-handle-response-data).
 
 ```python
 # hello_world.py
@@ -176,15 +177,15 @@ turn_on_light:
       example: [255, 0, 0]
 ```
 
-For more examples, visit the [Scripts section](https://community.home-assistant.io/c/projects/scripts) in our forum.
+For more examples, visit the [Scripts section](https://community.home-assistant.io/c/26) in our forum.
 
 ## Actions
 
 Available actions: `reload`.
 
-### Action `python_script.reload`
+### Action: Reload
 
-Reload all available python_scripts from the `<config>/python_scripts` folder, as a quicker alternative to restarting Home Assistant.
+The `python_script.reload` action reloads all available python_scripts from the `<config>/python_scripts` folder, as a quicker alternative to restarting Home Assistant.
 
 Use this when creating a new Python script, or after updating the `<config>/python_scripts/services.yaml` file. 
 

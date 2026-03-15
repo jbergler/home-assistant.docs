@@ -24,7 +24,7 @@ The **Home Assistant Core** {% term integration %} provides generic implementati
 
 The Home Assistant Core integration is also responsible for the general settings. These settings are defined during onboarding, but you can change them later under {% my general title="**Settings** > **System** > **General**" %}. For the detailed steps, refer to [Basic settings](/docs/configuration/basic/).
 
-If you prefer editing in YAML, you can define your general settings in the [`configuration.yaml` file](/docs/configuration/).
+If you prefer editing in YAML, you can define your general settings in the {% term "`configuration.yaml`" %} file.
 Note that for some of the settings, these can't be edited from the UI if they were defined in YAML. They will be grayed out or inaccessible.
 
 <p class='img'>
@@ -34,7 +34,7 @@ Note that for some of the settings, these can't be edited from the UI if they we
 
 To get started with the general settings in YAML, follow these steps:
 
-1. Copy the following information to your [`configuration.yaml` file](/docs/configuration/).
+1. Copy the following information to your {% term "`configuration.yaml`" %} file.
 
     ```yaml
     homeassistant:
@@ -42,12 +42,11 @@ To get started with the general settings in YAML, follow these steps:
       latitude: 32.87336
       longitude: 117.22743
       elevation: 430
+      radius: 100
       unit_system: metric
       currency: USD
       country: US
       time_zone: "America/Los_Angeles"
-      external_url: "https://www.example.com"
-      internal_url: "http://homeassistant.local:8123"
       allowlist_external_dirs:
         - "/usr/var/dumping-ground"
         - "/tmp"
@@ -78,6 +77,10 @@ elevation:
   description: Altitude above sea level in meters. Impacts sunrise data.
   required: false
   type: integer
+radius:
+  description: Radius in meters defining your locations area. Impacts location awareness.
+  required: false
+  type: integer
 unit_system:
   description: "`metric` for Metric, `us_customary` for US Customary. This also sets temperature_unit, Celsius for Metric and Fahrenheit for US Customary"
   required: false
@@ -96,11 +99,11 @@ currency:
   type: string
   default: "EUR"
 external_url:
-  description: "The URL that Home Assistant is available on from the internet. For example: `https://example.duckdns.org:8123`. Note that this setting may only contain a protocol, hostname and port; using a path is not supported."
+  description: "The URL that Home Assistant is available on from the internet. For example: `https://example.duckdns.org:8123`. Note that this setting may only contain a protocol, hostname and port; using a path is not supported. This can also be configured by navigating to **{% my network title="Settings > System > Network" %}**."
   required: false
   type: string
 internal_url:
-  description: "The URL that Home Assistant is available on from your local network. For example: `http://homeassistant.local:8123`. Note that this setting may only contain a protocol, hostname and port; using a path is not supported."
+  description: "The URL that Home Assistant is available on from your local network. For example: `http://192.168.0.10:8123`. Note that this setting may only contain a protocol, hostname and port; using a path is not supported. This can also be configured by navigating to **{% my network title="Settings > System > Network" %}**."
   required: false
   type: string
 customize:
@@ -141,6 +144,10 @@ debug:
   required: false
   type: boolean
   default: false
+webrtc:
+  description: A [custom list of STUN and TURN servers for WebRTC video streaming](#custom-stun-and-turn-servers).
+  required: false
+  type: map
 {% endconfiguration %}
 
 ## Editing entity settings in YAML
@@ -150,7 +157,7 @@ By default, all of your devices will be visible and have a default icon determin
 
 Most of these settings can be changed from the UI. For the detailed steps, refer to [Customizing entities](/docs/configuration/customizing-devices/).
 
-If you prefer editing in YAML, you can define your general settings in the [`configuration.yaml` file](/docs/configuration/).
+If you prefer editing in YAML, you can define your general settings in the {% term "`configuration.yaml`" %} file.
 
 ### Possible values
 
@@ -212,7 +219,7 @@ For a list of the supported device classes, refer to the documentation of the pl
 ### Manual customization
 
 {% important %}
-If you implement `customize`, `customize_domain`, or `customize_glob` you must make sure it is done inside of `homeassistant:` or it will fail.
+If you implement `customize`, `customize_domain`, or `customize_glob`, in your {% term "`configuration.yaml`" %} file, you must make sure it is done inside of `homeassistant:` or it will fail.
 {% endimportant %}
 
 ```yaml
@@ -251,17 +258,65 @@ homeassistant:
       icon: mdi:other
 ```
 
+## Custom STUN and TURN servers
+
+It's possible to override the default list of STUN and TURN servers which are used to initiate WebRTC streaming.
+Each STUN or TURN server can be configured as described in the table below.
+
+{% configuration webrtc %}
+ice_servers:
+  description: List of STUN and TURN server configurations
+  required: true
+  type: list
+  keys:
+    url:
+      description: STUN or TURN server URLs. This can either be a single URL or a list of URLs.
+      required: true
+      type: string
+    username:
+      description: Username for TURN server authentication
+      required: false
+      type: string
+    credential:
+      description: Credential for TURN server authentication
+      required: false
+      type: string
+{% endconfiguration %}
+
+### WebRTC configuration example
+
+{% important %}
+If you implement `webrtc` in your {% term "`configuration.yaml`" %} file, you must make sure it is done inside of `homeassistant:` or it will fail.
+{% endimportant %}
+
+```yaml
+homeassistant:
+  name: Home
+  unit_system: metric
+  # etc
+
+  webrtc:
+    ice_servers:
+    # Add an entry for each STUN or TURN server
+    - url:
+      - "stun:stun.example.com:19302"
+      - "stun:stun2.example.com:12345"
+    - url: "turn:turn.domain.com"
+      username: "username"
+      credential: "abc123"
+```
+
 ## Actions
 
 The `homeassistant` integration provides actions for controlling Home Assistant itself, as well as generic controls for any entity.
 
-### Action `homeassistant.check_config`
+### Action: Check configuration
 
-Reads the configuration files and checks them for correctness, but **does not** load them into Home Assistant. Creates a persistent notification and log entry if errors are found.
+The `homeassistant.check_config` action reads the configuration files and checks them for correctness, but does not load them into Home Assistant. It creates a persistent notification and log entry if errors are found.
 
-### Action `homeassistant.reload_all`
+### Action: Reload all
 
-Reload all YAML configuration that can be reloaded without restarting Home Assistant.
+The `homeassistant.reload_all` action reloads all YAML configuration that can be reloaded without restarting Home Assistant.
 
 It calls the `reload` action on all domains that have it available. Additionally,
 it reloads the core configuration (equivalent to calling
@@ -270,145 +325,134 @@ it reloads the core configuration (equivalent to calling
 Prior to reloading, a basic configuration check is performed. If that fails, the reload
 will not be performed and will raise an error.
 
-### Action `homeassistant.reload_custom_templates`
+### Action: Reload custom templates
 
-Reload all Jinja templates in the `config/custom_templates` directory. Changes to these templates
-will take effect the next time an importing template is rendered.
+The `homeassistant.reload_custom_templates` action reloads all Jinja templates in the `config/custom_templates` directory. Changes to these templates will take effect the next time an importing template is rendered.
 
-### Action `homeassistant.reload_config_entry`
+### Action: Reload config entry
 
-Reloads an integration config entry.
+The `homeassistant.reload_config_entry` action reloads an integration config entry.
 
 | Data attribute | Description                                                |
-| ---------------------- | ---------------------------------------------------------- |
-| `entity_id`            | List of entity ids used to reference a config entry.       |
-| `area_id`              | List of area ids used to reference a config entry.         |
-| `device_id`            | List of device ids used to reference a config entry.       |
-| `entry_id`             | A single config entry id used to reference a config entry. |
+| -------------- | ---------------------------------------------------------- |
+| `entity_id`    | List of entity ids used to reference a config entry.       |
+| `area_id`      | List of area ids used to reference a config entry.         |
+| `device_id`    | List of device ids used to reference a config entry.       |
+| `entry_id`     | A single config entry id used to reference a config entry. |
 
-### Action `homeassistant.reload_core_config`
+### Action: Reload core config
 
-Reloads the core configuration under `homeassistant:` and all linked files. Once loaded the new configuration is applied. New `customize:` information will be applied the next time the state of the entity gets updated.
+The `homeassistant.reload_core_config` action reloads the core configuration under `homeassistant:` and all linked files. Once loaded, the new configuration is applied. New `customize:` information will be applied the next time the state of the entity gets updated.
 
-### Action `homeassistant.restart`
+### Action: Restart
 
-Restarts the Home Assistant instance (also reloading the configuration on start).
+The `homeassistant.restart` action restarts the Home Assistant instance (also reloading the configuration on start).
 
-This will also do a configuration check before doing a restart. If the configuration check fails then Home Assistant will not be restarted, instead a persistent notification with the ID `persistent_notification.homeassistant_check_config` will be created. The logs will show details on what failed the configuration check.
+This action also performs a configuration check before doing a restart. If the configuration check fails, Home Assistant will not be restarted. Instead, a persistent notification with the ID `persistent_notification.homeassistant_check_config` will be created. The logs will show details on what failed the configuration check.
 
-### Action `homeassistant.stop`
+### Action: Stop
 
-Stops the Home Assistant instance. Home Assistant must be restarted from the Host device to run again.
+The `homeassistant.stop` action stops the Home Assistant instance. Home Assistant must be restarted from the host device to run again.
 
-### Action `homeassistant.set_location`
+### Action: Set location
 
-Update the location of the Home Assistant default zone (usually "Home").
+The `homeassistant.set_location` action updates the location of the Home Assistant default zone (usually "Home").
 
 | Data attribute | Optional | Description                 |
-| ---------------------- | -------- | --------------------------- |
-| `latitude`             | no       | Latitude of your location.  |
-| `longitude`            | no       | Longitude of your location. |
-| `elevation`            | yes      | Elevation of your location. |
+| -------------- | -------- | --------------------------- |
+| `latitude`     | no       | Latitude of your location.  |
+| `longitude`    | no       | Longitude of your location. |
+| `elevation`    | yes      | Elevation of your location. |
 
 #### Example
 
 ```yaml
-action:
-  action: homeassistant.set_location
-  data:
-    latitude: 32.87336
-    longitude: 117.22743
-    elevation: 120
+actions:
+  - action: homeassistant.set_location
+    data:
+      latitude: 32.87336
+      longitude: 117.22743
+      elevation: 120
 ```
 
-### Action `homeassistant.toggle`
+### Action: Toggle
 
-Generic action to toggle devices on/off. Same usage as the
-`light.toggle`, `switch.toggle`, etc. actions. The difference with this
-action compared the others, is that is can be used to mix different domains,
-for example, a light and a switch can be toggled in a single action.
+The `homeassistant.toggle` action is a generic action to toggle devices on/off. It has the same usage as the `light.toggle`, `switch.toggle`, and other toggle actions. The difference with this action compared to the others is that it can be used to mix different domains. For example, a light and a switch can be toggled in a single action.
 
 | Data attribute | Optional | Description                                   |
-| ---------------------- | -------- | --------------------------------------------- |
-| `entity_id`            | yes      | The entity_id of the device to toggle on/off. |
+| -------------- | -------- | --------------------------------------------- |
+| `entity_id`    | yes      | The entity_id of the device to toggle on/off. |
 
 #### Example
 
 ```yaml
-action:
-  action: homeassistant.toggle
-  target:
-    entity_id: 
-      - light.living_room
-      - switch.tv
+actions:
+  - action: homeassistant.toggle
+    target:
+      entity_id: 
+        - light.living_room
+        - switch.tv
 ```
 
-### Action `homeassistant.turn_on`
+### Action: Turn on
 
-Generic action to toggle devices on. Same usage as the
-`light.turn_on`, `switch.turn_on`, etc. actions. The difference with this
-action compared the others, is that is can be used to mix different domains,
-for example, a light and a switch can be turned on in a single action.
+The `homeassistant.turn_on` action is a generic action to turn devices on. It has the same usage as the `light.turn_on`, `switch.turn_on`, and other turn on actions. The difference with this action compared to the others is that it can be used to mix different domains. For example, a light and a switch can be turned on in a single action.
 
 | Data attribute | Optional | Description                             |
-| ---------------------- | -------- | --------------------------------------- |
-| `entity_id`            | yes      | The entity_id of the device to turn on. |
+| -------------- | -------- | --------------------------------------- |
+| `entity_id`    | yes      | The entity_id of the device to turn on. |
 
 #### Example
 
 ```yaml
-action:
-  action: homeassistant.turn_on
-  target:
-    entity_id:
-      - light.living_room
-      - switch.tv
+actions:
+  - action: homeassistant.turn_on
+    target:
+      entity_id:
+        - light.living_room
+        - switch.tv
 ```
 
-### Action `homeassistant.turn_off` 
+### Action: Turn off
 
-Generic action to toggle devices off. Same usage as the
-`light.turn_off`, `switch.turn_off`, etc. actions. The difference with this
-action compared the others, is that is can be used to mix different domains,
-for example, a light and a switch can be turned off in a single action.
+The `homeassistant.turn_off` action is a generic action to turn devices off. It has the same usage as the `light.turn_off`, `switch.turn_off`, and other turn off actions. The difference with this action compared to the others is that it can be used to mix different domains. For example, a light and a switch can be turned off in a single action.
 
 | Data attribute | Optional | Description                              |
-| ---------------------- | -------- | ---------------------------------------- |
-| `entity_id`            | yes      | The entity_id of the device to turn off. |
+| -------------- | -------- | ---------------------------------------- |
+| `entity_id`    | yes      | The entity_id of the device to turn off. |
 
 #### Example
 
 ```yaml
-action:
-  action: homeassistant.turn_off
-  target:
-    entity_id:
-      - light.living_room
-      - switch.tv
+actions:
+  - action: homeassistant.turn_off
+    target:
+      entity_id:
+        - light.living_room
+        - switch.tv
 ```
 
-### Action `homeassistant.update_entity`
+### Action: Update entity
 
-Force one or more entities to update its data rather than wait for the next scheduled update.
+The `homeassistant.update_entity` action forces one or more entities to update their data rather than wait for the next scheduled update.
 
 | Data attribute | Optional | Description                                             |
-| ---------------------- | -------- | ------------------------------------------------------- |
-| `entity_id`            | no       | One or multiple entity_ids to update. It can be a list. |
+| -------------- | -------- | ------------------------------------------------------- |
+| `entity_id`    | no       | One or multiple entity_ids to update. It can be a list. |
 
 #### Example
 
 ```yaml
-action:
-  action: homeassistant.update_entity
-  target:
-    entity_id:
-    - light.living_room
-    - switch.coffe_pot
+actions:
+  - action: homeassistant.update_entity
+    target:
+      entity_id:
+      - light.living_room
+      - switch.coffe_pot
 ```
 
-### Action `homeassistant.save_persistent_states`
+### Action: Save persistent states
 
-Save the persistent states (for entities derived from RestoreEntity) immediately.
-Maintain the normal periodic saving interval.
+The `homeassistant.save_persistent_states` action saves the persistent states (for entities derived from RestoreEntity) immediately while maintaining the normal periodic saving interval.
 
-Normally these states are saved at startup, every 15 minutes and at shutdown.
+Normally, these states are saved at startup, every 15 minutes, and at shutdown.

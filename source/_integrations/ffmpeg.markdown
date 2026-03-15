@@ -7,10 +7,10 @@ ha_release: 0.29
 ha_domain: ffmpeg
 ha_platforms:
   - camera
-ha_integration_type: integration
+ha_integration_type: system
 ---
 
-The FFmpeg integration allows other Home Assistant integrations to process
+The **FFmpeg** {% term integration %} allows other Home Assistant integrations to process
 video and audio streams.
 
 This integration supports all FFmpeg versions since 3.0.0. If you run

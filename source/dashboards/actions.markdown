@@ -101,6 +101,11 @@ tap_action:
       description: "If supported, listen for voice commands when opening the assist dialog and the `action` is defined as `assist`"
       type: boolean
       default: none
+    entity:
+      required: false
+      description: "Overrides the default entity to show when the `action` is defined as `more-info`"
+      type: string
+      default: none
 {% endconfiguration %}
 
 ## Hold action
@@ -167,6 +172,11 @@ hold_action:
       required: false
       description: "If supported, listen for voice commands when opening the assist dialog and the `action` is defined as `assist`"
       type: boolean
+      default: none
+    entity:
+      required: false
+      description: "Overrides the default entity to show when the `action` is defined as `more-info`"
+      type: string
       default: none
 {% endconfiguration %}
 
@@ -235,6 +245,11 @@ double_tap_action:
       description: "If supported, listen for voice commands when opening the assist dialog and the `action` is defined as `assist`"
       type: boolean
       default: none
+    entity:
+      required: false
+      description: "Overrides the default entity to show when the `action` is defined as `more-info`"
+      type: string
+      default: none
 {% endconfiguration %}
 
 ## Options for confirmation
@@ -258,6 +273,21 @@ text:
   required: false
   description: Text to present in the confirmation dialog.
   type: string
+title:
+  required: false
+  description: Title text of the confirmation dialog.
+  type: string
+  default: "Are you sure? (translated)"
+confirm_text:
+  required: false
+  description: Confirmation button text of the confirmation dialog.
+  type: string
+  default: "OK (translated)"
+dismiss_text:
+  required: false
+  description: Dismiss button text of the confirmation dialog.
+  type: string
+  default: "Cancel (translated)"
 exemptions:
   required: false
   description: "List of `exemption` objects. See below"

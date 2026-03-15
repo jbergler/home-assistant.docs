@@ -12,7 +12,6 @@ ha_release: '0.40'
 ha_iot_class: Cloud Polling
 ha_codeowners:
   - '@fronzbot'
-  - '@mkmer'
 ha_domain: blink
 ha_config_flow: true
 ha_platforms:
@@ -23,7 +22,7 @@ ha_platforms:
   - sensor
   - switch
 ha_dhcp: true
-ha_integration_type: integration
+ha_integration_type: hub
 ---
 
 The **Blink** {% term integration %}  lets you view camera images and motion events from [Blink](https://blinkforhome.com/) camera and security systems.
@@ -62,17 +61,17 @@ Please note that each camera reports two different states: one as `sensor.blink_
 
 Any sequential calls to {% term actions %} relating to blink should have a minimum of a 5 second delay in between them to prevent the calls from being throttled and ignored. The actions that act on a camera needs a target parameter.
 
-### `blink.record`
+### Action: Record
 
-Trigger a camera to record a new video clip.
+The `blink.record` action allows you to trigger a camera to record a new video clip.
 
-### `blink.trigger_camera`
+### Action: Trigger camera
 
-Trigger a camera to take a new still image.
+The `blink.trigger_camera` action allows you to trigger a camera to take a new still image.
 
-### `blink.save_video`
+### Action: Save video
 
-Save the last recorded video of a camera to a local file. Note that in most cases, Home Assistant will need to know that the directory is writable via the `allowlist_external_dirs` in your {% term "`configuration.yaml`" %} file (see example below).
+The `blink.save_video` action allows you to save the last recorded video of a camera to a local file. Note that in most cases, Home Assistant will need to know that the directory is writable via the `allowlist_external_dirs` in your {% term "`configuration.yaml`" %} file (see example below).
 
 | Data attribute | Optional | Description            |
 | ---------------------- | -------- | ---------------------- |
@@ -84,17 +83,19 @@ homeassistant:
     - '/tmp'
     - '/path/to/whitelist'
 ```
-### `blink.save_recent_clips`
 
-Save the recent video clips of a camera to a local file in the pattern `%Y%m%d_%H%M%S_{name}.mp4`. Note that in most cases, Home Assistant will need to know that the directory is writable via the `allowlist_external_dirs` in your {% term "`configuration.yaml`" %} file.
+### Action: Save recent clips
+
+
+The `blink.save_recent_clips` action allows you to save the recent video clips of a camera to a local file in the pattern `%Y%m%d_%H%M%S_{name}.mp4`. Note that in most cases, Home Assistant will need to know that the directory is writable via the `allowlist_external_dirs` in your {% term "`configuration.yaml`" %} file.
 
 | Data attribute | Optional | Description             |
 | ---------------------- | -------- | ----------------------- |
 | `file_path`            | no       | Location of save files. |
 
-### `blink.send_pin`
+### Action: Send pin
 
-Send a new pin to blink.  Since Blink's 2FA implementation is new and changing, this is to allow the integration to continue to work with user intervention.  The intent is to handle all of this behind the scenes, but until the login implementation is settled this was added. To use it, perform the action with the pin you receive from Blink as the payload (for a simple "Allow this Device" email, you may keep the `pin` value empty).
+The `blink.send_pin` action allows you to send a new pin to blink. Since Blink's 2FA implementation is new and changing, this is to allow the integration to continue to work with user intervention. The intent is to handle all of this behind the scenes, but until the login implementation is settled this was added. To use it, perform the action with the pin you receive from Blink as the payload (for a simple "Allow this Device" email, you may keep the `pin` value empty).
 
 | Data attribute | Optional | Description                  |
 | ---------------------- | -------- | ---------------------------- |
@@ -133,16 +134,15 @@ This example automation will arm your blink sync module to detect motion on any 
 Here, this example assumes your blink module is named `My Sync Module` and that you have [device trackers](/integrations/device_tracker) set up for presence detection.
 
 ```yaml
-- id: arm_blink_when_away
-  alias: "Arm Blink When Away"
-  trigger:
-    platform: state
-    entity_id: all
-    to: "not_home"
-  action:
-    action: alarm_control_panel.alarm_arm_away
-    target:
-      entity_id: alarm_control_panel.blink_my_sync_module
+- alias: "Arm Blink When Away"
+  triggers:
+    - trigger: state
+      entity_id: all
+      to: "not_home"
+  actions:
+    - action: alarm_control_panel.alarm_arm_away
+      target:
+        entity_id: alarm_control_panel.blink_my_sync_module
 ```
 
 ### Disarm Blink when home
@@ -150,16 +150,15 @@ Here, this example assumes your blink module is named `My Sync Module` and that 
 Similar to the previous example, this automation will disarm blink when arriving home.
 
 ```yaml
-- id: disarm_blink_when_home
-  alias: "Disarm Blink When Home"
-  trigger:
-    platform: state
-    entity_id: all
-    to: "home"
-  action:
-    action: alarm_control_panel.alarm_disarm
-    target:
-      entity_id: alarm_control_panel.blink_my_sync_module
+- alias: "Disarm Blink When Home"
+  triggers:
+    - trigger: state
+      entity_id: all
+      to: "home"
+  actions:
+    - action: alarm_control_panel.alarm_disarm
+      target:
+        entity_id: alarm_control_panel.blink_my_sync_module
 ```
 
 ### Save most recent video locally when motion detected
@@ -171,13 +170,12 @@ The following example assumes your camera's name (in the Blink app) is `My Camer
 {% raw %}
 
 ```yaml
-- id: save_blink_video_on_motion
-  alias: "Save Blink Video on Motion"
-  trigger:
-    platform: state
-    entity_id: binary_sensor.blink_my_camera_motion_detected
-    to: "on"
-  action:
+- alias: "Save Blink Video on Motion"
+  triggers:
+    - trigger: state
+      entity_id: binary_sensor.blink_my_camera_motion_detected
+      to: "on"
+  actions:
     -  action: blink.save_video
        target:
          entity_id: camera.blink_my_camera
@@ -200,12 +198,11 @@ The file will be saved to `/tmp/videos/YYYYMMDD_HHmmSS_MyCamera.mp4`.
 The file name of the downloaded video file is not configurable.
 
 ```yaml
-- id: save_recent_clips_from_my_camera
-  alias: "Save Recent Clips from My Camera"
-  trigger:
-    - platform: time_pattern
+- alias: "Save Recent Clips from My Camera"
+  triggers:
+    - trigger: time_pattern
       minutes: /3
-  action:
+  actions:
     - action: blink.save_recent_clips
       target:
         entity_id: camera.my_camera

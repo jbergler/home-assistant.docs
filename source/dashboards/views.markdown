@@ -34,12 +34,10 @@ Views control the layout.
 
 There are four different view types:
 
+- **Sections (default)**: Arranges cards in a grid system and lets you group them in sections.
+- **Masonry**: Arranges cards in columns based on their card size.
 - **Panel**: Displays one card in full width. For example a map or an image.
 - **Sidebar**: Arranges cards in 2 columns, a wide one and a smaller one on the right.
-- **Masonry (default)**: Arranges cards in columns based on their card size.
-- **Sections (experimental)**: Arranges cards in a grid system and lets you group them in sections.
-
-It is currently not possible to migrate your dashboard from one view type into another. For example, if you have a dashboard in masonry view, and want it in sections view, you need to create a new view.
 
 ## Adding a view to a dashboard
 
@@ -51,23 +49,45 @@ It is currently not possible to migrate your dashboard from one view type into a
 3. Define the view settings:
    - If you want a view title, enter the **Title**.
    - If you want to see an icon, select the [view icon](#view-icon).
-     - If an icon is defined, only the icon is shown. The text only shows as a tooltip.
+     - If an icon is defined, only the icon is shown. The text title is shown as a tooltip. To show both the icon and the text title, enable the **Show icon and title** toggle.
      - We use [Material icons](https://pictogrammers.com/library/mdi/).
    - If you want to link to another view, define the [URL](#url-of-a-view).
    - If you want to use a previously defined theme, select the [theme](/integrations/frontend/#themes).
    - Select the [view type](#view-type).
    - If this view is meant to be used as a [subview](#subview) only, enable the **Subview** toggle.
+   - If you are using **Sections view**, choose the number of columns you want to use, and, if you want to let the system fill gaps between cards, enable **Dense section placement.**.
 
-   ![The create new view configuration dialog](/images/dashboards/dashboard_view_configuration_01.png)
+   ![The create new view configuration dialog](/images/dashboards/dashboard_view_configuration_03.png)
 
-4. To use a background image, on the **Background** tab, select an image.
-   - **Upload picture** lets you pick an image from the system used to show your Home Assistant UI.
-   - **Local path** lets you pick an image stored on Home Assistant. For example: `/homeassistant/images/lights_view_background_image.jpg`.
-     - To store an image on Home Assistant, you need to [configure access to files](/common-tasks/os/#configuring-access-to-files), for example via [Samba](/common-tasks/os/#installing-and-using-the-samba-add-on) or the [Studio Code Server](/common-tasks/os/#installing-and-using-the-visual-studio-code-vsc-add-on) add-on.
-   - **web URL** let you pick an image from the web. For example `https://www.home-assistant.io/images/frontpage/assist_wake_word.png`.
+4. To use a background image, on the **Background** tab, select an image and customize the background settings. [Read more about these options.](#background)
+
 5. On the **Badges** tab, select the entities you want to be represented by a badge.
     - Sidebar and panel views do not support badges.
 6. By default, the new section is visible to all users. On the **Visibility** tab, you can disable the view for users.
+
+## Migrating a view into a sections view
+
+If you have already defined a view but you would now like to have it in a section view type, you can migrate that content. For example, you can migrate from a masonry to a sections view. Currently, you cannot migrate a sections view type into another view type.
+
+Migrating does not affect the current view. It will stay as is, and a new, additional view is created.
+
+To migrate a view into a sections view type, follow these steps:
+
+1. Open the view you want to migrate, and go into edit mode.
+2. In the configuration dialog, select the new view type.
+3. If the new view type offers additional settings, define those settings.
+   - For more information on those settings, refer to the documentation of that view type.
+4. In the top-right corner, select **Convert**.
+   - **Result**: A new, additional view is created.
+   - Your current view will stay untouched.
+   - A new tab opens, and all your cards are imported to the new view.
+5. In the **Imported cards** section, pick each of the cards, and drag them into the sections.
+   - To edit and customize the view, follow the steps in the [sections view](/dashboards/sections/) documentation.
+
+    ![Move cards from imported cards section onto your dashboard](/images/dashboards/imported-cards.png)
+6. To save your changes, select **Done**.
+    - **Result**: Your new dashboard is shown.
+    - If you have cards that were not yet integrated, you can still add them later. They are still available in the Edit mode, in the **Imported cards** section.
 
 ## URL of a view
 
@@ -95,13 +115,18 @@ Picture card configuration:
 
 ## View icon
 
-If you define a view icon, the icon instead of the title will be displayed, the title will then be used as a tool-tip.
+If a view icon is defined, only the icon is shown. The text title is shown as a tooltip. To show both the icon and the text title, enable the **Show icon and title** toggle.
 
-### Example
+### Examples
 
 ```yaml
 - title: Garden
   icon: mdi:flower
+```
+```yaml
+- title: Garden
+  icon: mdi:flower
+  show_icon_and_title: true
 ```
 
 ## Visible
@@ -139,9 +164,9 @@ user:
   type: string
 {% endconfiguration %}
 
-## View type
+## Changing the view type in YAML
 
-You can change the layout of a view by using a different view type. The default is [`masonry`](/dashboards/masonry).
+You can change the layout of a view in YAML by using a different view type. The default is [`section`](/dashboards/section).
 
 ### Example
 
@@ -168,9 +193,71 @@ Set a separate [theme](/integrations/frontend/#themes) for the view and its card
 
 ## Background
 
-You can style the background of your views with a [theme](/integrations/frontend/#themes). You can use the CSS variable `lovelace-background`. For wallpapers you probably want to use the example below, more options can be found [here](https://developer.mozilla.org/en-US/docs/Web/CSS/background).
+The background settings of a view can be customized to display a background. Alternatively, a theme variable can be used to customize the background of all views. 
 
-### Example
+### View-specific background settings
+
+**Image** - Sets the background image to use behind the view: 
+   - **Upload picture** lets you pick an image from the system used to show your Home Assistant UI.
+   - **Local path** lets you pick an image stored on Home Assistant. For example: `/homeassistant/images/lights_view_background_image.jpg`.
+     - To store an image on Home Assistant, you need to [configure access to files](/common-tasks/os/#configuring-access-to-files), for example via [Samba](/common-tasks/os/#installing-and-using-the-samba-app) or the [Studio Code Server](/common-tasks/os/#installing-and-using-the-visual-studio-code-vsc-app) app.
+   - **web URL** let you pick an image from the web. For example `https://www.home-assistant.io/images/frontpage/assist_wake_word.png`.
+
+{% configuration views %}
+background:
+  required: false
+  description: Customize the view's background with options for image, transparency, size, alignment, repeat, and attachment. 
+  type: map
+  keys:
+    image:
+      required: false
+      description: Sets the background image to use behind the view.
+      type: string
+    opacity:
+      required: false
+      description: Adjust the background's opacity, from fully opaque to transparent.
+      type: integer
+      default: 100
+    size: 
+      required: false
+      description: Choose how the background fits the space. Defaults to the original picture size, fill view (`cover` in YAML) fills the view with cropping if necessary and fits view (`contain` in YAML) fits the image within the view, maintaining aspect ratio.
+      type: string
+      default: auto
+    alignment: 
+      required: false
+      description: Precisely position the background. Valid options can be anything between top left and bottom right, with center being the default. 
+      type: string
+      default: center
+    repeat: 
+      required: false
+      description: Controls whether the background repeats across the view. Repeating is useful when a tiled background is being used.
+      type: string
+      default: no-repeat
+    attachment: 
+      required: false
+      description:  Controls whether a background image's position is fixed within the view, or scrolls.
+      type: string
+      default: scroll
+{% endconfiguration %}
+
+#### Example
+
+```yaml
+# Example background section in view yaml
+background:
+  image: /local/background.png
+  opacity: 50 # any percentage between 0 and 100
+  size: auto # auto, cover, contain
+  alignment: center # top left, top center, top right, center left, center, center right, bottom left, bottom center, bottom right
+  repeat: no-repeat # repeat, no-repeat
+  attachment: scroll # scroll, fixed
+```
+
+### Background theme variable
+
+You can style the background of all your views with a [theme](/integrations/frontend/#themes). You can use the CSS variable `lovelace-background`. For wallpapers you probably want to use the example below, more options can be found [here](https://developer.mozilla.org/en-US/docs/Web/CSS/background).
+
+#### Example
 
 ```yaml
 # Example configuration.yaml entry
@@ -238,10 +325,15 @@ views:
       required: false
       description: Icon-name from Material Design Icons. You can use any icon from [Material Design Icons](https://pictogrammers.com/library/mdi/). Prefix the icon name with `mdi:`, ie `mdi:home`. Only for "View", not for "Subview".
       type: string
+    show_icon_and_title:
+      required: false
+      description: Show both icon and text title. Only for "View", not for "Subview".
+      type: boolean
+      default: false      
     background:
       required: false
-      description: Style the background using CSS.
-      type: string
+      description: Style the background behind the view.
+      type: map
     theme:
       required: false
       description: Themes view and cards.

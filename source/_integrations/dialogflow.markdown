@@ -71,7 +71,7 @@ When activated, the [`alexa` integration](/integrations/alexa/) will have Home A
 
 ## Examples
 
-Download [this zip](https://github.com/home-assistant/home-assistant.io/blob/current/source/assets/HomeAssistant_APIAI.zip) and load it in your Dialogflow agent (**Settings** -> **Export and Import**) for examples intents to use with this configuration:
+Download [this zip](https://github.com/home-assistant/home-assistant.io/blob/current/source/assets/HomeAssistant_APIAI.zip) and load it in your Dialogflow agent (**Settings** > **Export and Import**) for examples intents to use with this configuration:
 
 {% raw %}
 
@@ -108,7 +108,7 @@ intent_script:
   TurnLights:
     speech:
       text: Turning {{ Room }} lights {{ OnOff }}
-    action:
+    actions:
       - action: notify.pushbullet
         data:
           message: Someone asked via apiai to turn {{ Room }} lights {{ OnOff }}

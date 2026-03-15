@@ -16,10 +16,10 @@ ha_ssdp: true
 ha_platforms:
   - remote
   - select
-ha_integration_type: integration
+ha_integration_type: device
 ---
 
-The `harmony` integration allows you to control the state of your [Harmony Hub Device](https://support.myharmony.com/hub).
+The **Logitech Harmony Hub** {% term integration %} allows you to control the state of your [Harmony Hub Device](https://support.myharmony.com/hub).
 
 Supported units:
 
@@ -33,7 +33,7 @@ Supported units:
 
 **Note:** Depending on the firmware, you may need to enable XMPP for this integration to work. From your Harmony app, go to: **Menu** > **Harmony Setup** > **Add/Edit Devices & Activities** > **Remote & Hub** > **Enable XMPP**.
 
-Once the Logitech Harmony Hub has been configured, the default activity and duration in seconds between sending commands to a device can be adjusted in the settings via **Settings** -> **Devices & services** >> **Your Logitech Harmony Hub**
+Once the Logitech Harmony Hub has been configured, the default activity and duration in seconds between sending commands to a device can be adjusted in the settings via {% my integrations title="**Settings** > **Devices & services**" %} > **Your Logitech Harmony Hub**
 
 ### Configuration file
 
@@ -80,7 +80,7 @@ In the file 'harmony_REMOTENAME.conf' you can find the available activities, for
 Using the activity name 'Watch TV', you can perform an action via automation to switch this activity on:
 
 ```yaml
-action:
+actions:
   - action: remote.turn_on
     target:
       entity_id: remote.bed_room_hub
@@ -99,6 +99,7 @@ Send a single command or a set of commands to one device, device ID and availabl
 | `command`              | no       | A single command or a list of commands to send.     |
 | `num_repeats`          | yes      | The number of times to repeat the command(s).       |
 | `delay_secs`           | yes      | The number of seconds between sending each command. |
+| `hold_secs`            | yes      | The number of seconds the button on the remote is held before the release is sent. |
 
 In the file 'harmony_REMOTENAME.conf' you can find the available devices and commands, for example:
 
@@ -152,9 +153,9 @@ data:
   delay_secs: 0.6
 ```
 
-### Action `harmony.change_channel`
+### Action: Change channel
 
-Sends the change channel command to the Harmony HUB
+The `harmony.change_channel` action sends the change channel command to the Harmony Hub.
 
 | Data attribute | Optional | Description                 |
 | ---------------------- | -------- | --------------------------- |
@@ -171,9 +172,9 @@ data:
   channel: 200
 ```
 
-### Action `harmony.sync`
+### Action: Sync
 
-Force synchronization between the Harmony device and the Harmony cloud.
+The `harmony.sync` action forces synchronization between the Harmony device and the Harmony cloud.
 
 | Data attribute | Optional | Description          |
 | ---------------------- | -------- | -------------------- |
@@ -205,27 +206,27 @@ The example below shows how to control an `input_boolean` switch using the Harmo
 ```yaml
 automation:
   - alias: "Watch TV started from harmony hub"
-    trigger:
-      platform: state
-      entity_id: remote.family_room
-    condition:
-      condition: template
-      value_template: '{{ trigger.to_state.attributes.current_activity == "Kodi" }}'
-    action:
-      action: input_boolean.turn_on
-      target:
-        entity_id: input_boolean.notify
+    triggers:
+      - trigger: state
+        entity_id: remote.family_room
+    conditions:
+      - condition: template
+        value_template: '{{ trigger.to_state.attributes.current_activity == "Kodi" }}'
+    actions:
+      - action: input_boolean.turn_on
+        target:
+          entity_id: input_boolean.notify
   - alias: "PowerOff started from harmony hub"
-    trigger:
-      platform: state
-      entity_id: remote.family_room
-    condition:
-      condition: template
-      value_template: '{{ trigger.to_state.attributes.current_activity == "PowerOff" }}'
-    action:
-      action: input_boolean.turn_off
-      target:
-        entity_id: input_boolean.notify
+    triggers:
+      - trigger: state
+        entity_id: remote.family_room
+    conditions:
+      - condition: template
+        value_template: '{{ trigger.to_state.attributes.current_activity == "PowerOff" }}'
+    actions:
+      - action: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.notify
 ```
 
 {% endraw %}

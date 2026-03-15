@@ -12,9 +12,10 @@ ha_integration_type: integration
 related:
   - docs: /docs/configuration/
     title: Configuration file
+ha_quality_scale: legacy
 ---
 
-The `osramlightify` {% term integration %} allows you to integrate your [Osram Lightify](https://www.osram.com/cb/lightify/index.jsp) into Home Assistant.
+The **Osramlightify** {% term integration %} allows you to integrate your [Osram Lightify](https://www.osram.com/cb/lightify/index.jsp) into Home Assistant.
 
 To enable the {% term integration %}, add it to your {% term "`configuration.yaml`" %} file.
 {% include integrations/restart_ha_after_config_inclusion.md %}
@@ -78,7 +79,7 @@ Please note that to update all light statuses, only one query to the bridge is a
 
 If a group has associated scenes, they will be imported as light effects and visible in `Effect`
 dropdown on UI. You can apply a scene by clicking an item from the dropdown or by calling
-`light.turn_on` service:
+`light.turn_on` action:
 
 ```yaml
   - action: light.turn_on

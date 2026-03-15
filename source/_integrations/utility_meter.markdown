@@ -65,7 +65,7 @@ Sensor always available:
     You need to understand that with this option activated, when the source entity becomes unavailable, the utility meter sensor will have the last totalized value and will not change until the source entity returns to a valid state.
 {% endconfiguration_basic %}
 
-If the meter reset cycle and reset offsets are to limited for your use case,
+If the meter reset cycle and reset offsets are too limited for your use case,
 consider using the YAML configuration below, which support CRON-style patterns
 that provide a greater flexibility.
 
@@ -155,17 +155,17 @@ offset:
 
 Some of the actions are only available if tariffs are configured.
 
-### Action `utility_meter.reset`
+### Action: Reset
 
-Reset the Utility Meter. All sensors tracking tariffs will be reset to 0.
+The `utility_meter.reset` action resets the Utility Meter. All sensors tracking tariffs will be reset to 0.
 
 | Data attribute | Optional | Description |
 | ---------------------- | -------- | ----------- |
 | `entity_id` | no | String or list of strings that point at `entity_id`s of utility_meters.
 
-### Action `utility_meter.calibrate`
+### Action: Calibrate
 
-Calibrate the Utility Meter. Change the value of a given sensor.
+The `utility_meter.calibrate` action calibrates the Utility Meter by changing the value of a given sensor.
 
 | Data attribute | Optional | Description |
 | ---------------------- | -------- | ----------- |
@@ -212,16 +212,16 @@ a time based automation can be used:
 
 ```yaml
 automation:
-  trigger:
-    - platform: time
+  triggers:
+    - trigger: time
       at: "09:00:00"
       variables:
         tariff: "peak"
-    - platform: time
+    - trigger: time
       at: "21:00:00"
       variables:
         tariff: "offpeak"
-  action:
+  actions:
     - action: select.select_option
       target:
         entity_id: select.daily_energy
@@ -292,7 +292,7 @@ utility_meter:
 
 Additionally, you can add template sensors to compute daily and monthly total usage. Important note, in these examples,
 we use the `is_number()` [function](/docs/configuration/templating/#numeric-functions-and-filters) to verify the values
-returned from the sensors are numeric. If this evalutes to false, `None` is returned.
+returned from the sensors are numeric. If this evaluates to false, `None` is returned.
 
 {% raw %}
 

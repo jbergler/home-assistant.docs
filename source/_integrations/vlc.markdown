@@ -12,9 +12,10 @@ ha_integration_type: integration
 related:
   - docs: /docs/configuration/
     title: Configuration file
+ha_quality_scale: legacy
 ---
 
-The `vlc` platform allows you to control [VLC media player](https://www.videolan.org/vlc/index.html).
+The **VLC media player** {% term integration %} allows you to control [VLC media player](https://www.videolan.org/vlc/index.html).
 
 {% important %}
 The **VLC media player** {% term integration %}, is currently only available for installations that are based on the Home Assistant Core in a Python virtual environment.

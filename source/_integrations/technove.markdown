@@ -17,10 +17,9 @@ ha_platforms:
   - sensor
   - switch
 ha_integration_type: device
-ha_quality_scale: platinum
 ---
 
-The TechnoVE integration provides connectivity with TechnoVE Smart Charging Station through the station local API.
+The **TechnoVE** {% term integration %} provides connectivity with TechnoVE Smart Charging Station through the station local API.
 
 {% include integrations/config_flow.md %}
 
@@ -55,7 +54,12 @@ The {% term integration %} adds the following sensors:
 - Last session energy usage
 - Wi-Fi signal strength
 - Wi-Fi network name
-- Status
+- Status, one of the following values:
+  - Unplugged
+  - Plugged, waiting
+  - Plugged, charging
+  - Out of activation period
+  - High tariff period
 
 ## Switch
 
@@ -64,3 +68,4 @@ The {% term integration %} adds the following switch:
 | Name             | Description                                                                                                                                                                                                                                              |
 | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Auto-charge mode | When enabled, vehicles will start charging automatically when plugged in. When turned off, charging will need to be manually started each time a vehicle is plugged in. Note: Disabling auto-charge mode does not interrupt an ongoing charging session. |
+| Charging enabled | When enabled, vehicles will be able to charge. Disable it to stop a vehicle from charging. Note: This switch can only be used when auto-charge mode is disabled.                                                                                         |

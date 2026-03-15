@@ -1,6 +1,5 @@
 html {
   overflow-y: auto;
-  scroll-snap-type: y proximity;
 }
 
 body, html {
@@ -12,7 +11,7 @@ body, html {
 
 .page-content {
   display: inline-block;
-  height: 100%;
+  min-height: 100%;
   margin-top: 0;
   padding-top: 88px;
   width: 100%;
@@ -62,6 +61,11 @@ table {
   th,td {
       word-wrap: break-word;
   }
+}
+
+.text-input,
+textarea {
+  cursor: text;
 }
 
 .gist {

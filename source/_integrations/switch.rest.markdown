@@ -8,7 +8,7 @@ ha_iot_class: Local Polling
 ha_domain: rest
 ---
 
-The `rest` switch platform allows you to control a given endpoint that supports a [RESTful API](https://en.wikipedia.org/wiki/Representational_state_transfer). The switch can get the state via GET and set the state via POST on a given REST resource.
+The **RESTful Switch** {% term integration %} allows you to control a given endpoint that supports a [RESTful API](https://en.wikipedia.org/wiki/Representational_state_transfer). The switch can get the state via GET and set the state via POST on a given REST resource.
 
 ## Configuration
 
@@ -101,6 +101,8 @@ verify_ssl:
 {% important %}
 Make sure that the URL matches exactly your endpoint or resource.
 {% endimportant %}
+
+{% include integrations/using_templates.md %}
 
 ## Example
 

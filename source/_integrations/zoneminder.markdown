@@ -22,9 +22,10 @@ ha_integration_type: integration
 related:
   - docs: /docs/configuration/
     title: Configuration file
+ha_quality_scale: legacy
 ---
 
-The `zoneminder` integration sets up Home Assistant with your [ZoneMinder](https://www.zoneminder.com) instance.
+The **ZoneMinder** {% term integration %} sets up Home Assistant with your [ZoneMinder](https://www.zoneminder.com) instance.
 
 There is currently support for the following device types within Home Assistant:
 
@@ -93,9 +94,9 @@ zoneminder:
     password: YOUR_PASSWORD
 ```
 
-### Action
+### Action: Set run state
 
-Once loaded, the `zoneminder` platform will expose an action (`set_run_state`) that can be used to change the current run state of ZoneMinder.
+The `zoneminder.set_run_state` action changes the current run state of ZoneMinder.
 
 | Data attribute | Optional | Description                       |
 | :--------------------- | :------- | :-------------------------------- |
@@ -105,7 +106,7 @@ Once loaded, the `zoneminder` platform will expose an action (`set_run_state`) t
 For example, if your ZoneMinder instance was configured with a run state called "Home", you could write an [automation](/getting-started/automation/) that changes ZoneMinder to the "Home" run state by including the following [action](/getting-started/automation-action/):
 
  ```yaml
-action:
+actions:
   action: zoneminder.set_run_state
   data:
     id: ZM_HOST

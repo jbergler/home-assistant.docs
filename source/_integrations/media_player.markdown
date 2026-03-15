@@ -20,6 +20,19 @@ Interacts with media players on your network.
 
 {% include integrations/building_block_integration.md %}
 
+## The state of a media player
+
+A media player can have the following states:
+
+- **Off**: The media player is turned off and is not accepting commands until turned on.
+- **On**: The media player is turned on, but no details on its state are currently known.
+- **Idle**: The media player is turned on and accepting commands, but currently not playing any media. Possibly at some idle home screen.
+- **Playing**: The media player is currently playing media.
+- **Paused**: The media player has an active media and is currently paused
+- **Buffering**: The media player is preparing to start playback of media.
+- **Unavailable**: The entity is currently unavailable.
+- **Unknown**: The state is not yet known.
+
 ## Actions
 
 ### Media control actions
@@ -29,28 +42,36 @@ Available actions: `turn_on`, `turn_off`, `toggle`, `volume_up`, `volume_down`, 
 | ---------------------- | -------- | ------------------------------------------------ |
 | `entity_id`            |      yes | Target a specific media player. To target all media players, use `all`. |
 
-#### Action `media_player.volume_mute`
+#### Action: Volume mute
+
+The `media_player.volume_mute` action mutes or unmutes the volume of a media player.
 
 | Data attribute | Optional | Description                                      |
 |------------------------|----------|--------------------------------------------------|
 | `entity_id`            |      yes | Target a specific media player. To target all media players, use `all`. |
 | `is_volume_muted`      |       no | True/false for mute/unmute                       |
 
-#### Action `media_player.volume_set`
+#### Action: Volume set
+
+The `media_player.volume_set` action sets the volume level of a media player.
 
 | Data attribute | Optional | Description                                      |
 |------------------------|----------|--------------------------------------------------|
 | `entity_id`            |      yes | Target a specific media player. To target all media players, use `all`. |
 | `volume_level`         |       no | Float for volume level. Range 0..1               |
 
-#### Action `media_player.media_seek`
+#### Action: Media seek
+
+The `media_player.media_seek` action seeks to a specific position in the currently playing media.
 
 | Data attribute | Optional | Description                                            |
 |------------------------|----------|--------------------------------------------------------|
 | `entity_id`            |      yes | Target a specific media player. To target all media players, use `all`.       |
 | `seek_position`        |       no | Position to seek to. The format is platform dependent. |
 
-#### Action `media_player.play_media`
+#### Action: Play media
+
+The `media_player.play_media` action plays media on a media player.
 
 | Data attribute | Optional | Description                                                                                                                                                            |
 | -----------------------| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -136,54 +157,145 @@ data:
     title: HomeAssistantRadio
 ```
 
-#### Action `media_player.select_source`
+#### Action: Select source
+
+The `media_player.select_source` action selects an input source for a media player.
 
 | Data attribute | Optional | Description                                          |
 | ---------------------- | -------- | ---------------------------------------------------- |
 | `entity_id`            |      yes | Target a specific media player. To target all media players, use `all`.     |
 | `source`               |       no | Name of the source to switch to. Platform dependent. |
 
-#### Action `media_player.select_sound_mode`
+#### Action: Select sound mode
 
-Currently only supported on [Denon AVR](/integrations/denonavr/) and  [Songpal](/integrations/songpal).
+The `media_player.select_sound_mode` action selects a sound mode for a media player. Currently only supported on [Denon AVR](/integrations/denonavr/) and  [Songpal](/integrations/songpal).
 
 | Data attribute | Optional | Description                                          |
 | ---------------------- | -------- | ---------------------------------------------------- |
 | `entity_id`            |      yes | Target a specific media player. For example `media_player.marantz`|
 | `sound_mode`           |       no | Name of the sound mode to switch to. Platform dependent.|
 
-#### Action `media_player.shuffle_set`
+#### Action: Shuffle set
 
-Currently only supported on [Sonos](/integrations/sonos), [Spotify](/integrations/spotify), [MPD](/integrations/mpd), [Kodi](/integrations/kodi), [Roon](/integrations/roon), [OwnTone](/integrations/forked_daapd), [Squeezebox](/integrations/squeezebox) and [Universal](/integrations/universal).
+The `media_player.shuffle_set` action enables or disables shuffle mode for a media player.
 
 | Data attribute | Optional | Description                                          |
 | ---------------------- | -------- | ---------------------------------------------------- |
 | `entity_id`            |      yes | Target a specific media player. For example `media_player.spotify`|
 | `shuffle`              |       no | `true`/`false` for enabling/disabling shuffle        |
 
-#### Action `media_player.repeat_set`
+#### Action: Repeat set
+
+The `media_player.repeat_set` action sets the repeat mode for a media player.
 
 | Data attribute | Optional | Description                                          |
 | ---------------------- | -------- | ---------------------------------------------------- |
 | `entity_id`            |      yes | Target a specific media player. For example `media_player.kitchen`|
 | `repeat`               |       no | `off`/`all`/`one` for setting repeat mode            |
 
-#### Action `media_player.join`
+#### Action: Join
 
-Allows to group media players together for synchronous playback. Only works on supported multiroom audio systems.
+The `media_player.join` action groups media players together for synchronous playback. Only works on supported multiroom audio systems.
 
 | Data attribute | Optional | Description                                          |
 | ---------------------- | -------- | ---------------------------------------------------- |
 | `entity_id`            |      yes | The media player entity whose playback will be expanded to the players specified in `group_members`.  |
 | `group_members`        |       no | The player entities which will be synced with the playback from `entity_id`.  |
 
-#### Action `media_player.unjoin`
+#### Action: Unjoin
+
+The `media_player.unjoin` action unjoins a media player from any player groups.
 
 | Data attribute | Optional | Description                                          |
 | ---------------------- | -------- | ---------------------------------------------------- |
 | `entity_id`            |      yes | Unjoin this media player from any player groups.     |
 
-### Device class
+#### Action: Browse media
+
+The `media_player.browse_media` action provides access to browsing the media tree provided by the integration. Similar in functionality to browsing media through the media player UI. Common use cases include automations that need to navigate media libraries and find media by specific categories.
+
+| Data attribute | Optional | Description                                          |
+| ---------------------- | -------- | ---------------------------------------------------- |
+| `media_content_type`   |      yes | The type of media to browse such as music, playlist, and video. Integration specific.  |
+| `media_content_id`   |      yes | The content ID to browse. Integration specific. An empty content ID returns the top-level of the browse tree. |
+
+The action returns a media tree object that can be stored in a response variable for use in subsequent automation steps. The response includes:
+
+| Field | Description |
+|-------|-------------|
+| `title` | Display name of the current level |
+| `media_class` | Type of the current item (for example, directory, music, video) |
+| `media_content_type` | Content type identifier |
+| `media_content_id` | Integration specific content ID |
+| `children_media_class` | Types of items in the children array |
+| `children` | Array of child items with similar properties |
+
+Browse the root of the tree.
+
+Note: The following example shows a response from a Sonos device. The structure and content types may vary between different media player integrations. Media content IDs are often URL-encoded.
+
+```yaml
+  # Get the top of the browse tree
+  - action: media_player.browse_media
+    target:
+      entity_id: media_player.living_room
+    response_variable: top_level
+```
+
+```yaml
+# abbreviated Example response
+media_player.living_room:
+  title: Sonos
+  media_class: directory
+  media_content_type: root
+  media_content_id: ""
+  # children_media_class indicates that all items in the children array are directories  
+  children_media_class: directory
+  children:
+    - title: Favorites
+      media_class: directory
+      media_content_type: favorites
+      media_content_id: ""
+    - title: Music Library
+      media_class: directory
+      media_content_type: library
+      media_content_id: ""
+```
+
+Example of browsing a specific artist with the Sonos Integration:
+
+Note: This example demonstrates browsing an artist's albums. The format of `media_content_id` (`A:ALBUMARTIST/artist_name`) is specific to Sonos. Notice how special characters in album names are URL-encoded in the response (for example, `%20` for spaces).
+
+```yaml
+  - action: media_player.browse_media
+    target:
+      entity_id: media_player.living_room
+    data:
+      media_content_id: A:ALBUMARTIST/Beatles
+      media_content_type: album
+    response_variable: albums
+```
+
+```yaml
+# Abbreviated Example response
+media_player.living_room:
+  title: Beatles
+  media_class: album
+  media_content_type: album
+  media_content_id: A:ALBUMARTIST/Beatles
+  children_media_class: directory
+  children:
+    - title: A Hard Day's Night
+      media_class: album
+      media_content_type: album
+      media_content_id: A:ALBUMARTIST/Beatles/A%20Hard%20Day's%20Night
+    - title: Abbey Road
+      media_class: album
+      media_content_type: album
+      media_content_id: A:ALBUMARTIST/Beatles/Abbey%20Road
+```
+
+## Device class
 
 {% include integrations/device_class_intro.md %}
 

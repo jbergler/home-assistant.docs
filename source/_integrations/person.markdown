@@ -10,7 +10,7 @@ ha_iot_class: Calculated
 ha_integration_type: system
 ---
 
-The `person` integration allows connecting [device tracker](/integrations/device_tracker/) entities to one or more person entities. The state updates of a connected device tracker will set the state of the person. When multiple device trackers are used, the state of person will be determined in this order:
+The **Person** {% term integration %} allows connecting [device tracker](/integrations/device_tracker/) entities to one or more person entities. The state updates of a connected device tracker will set the state of the person. When multiple device trackers are used, the state of person will be determined in this order:
 
 1. If there are stationary trackers (non-GPS trackers, e.g., a router or Bluetooth device tracker) presenting the state `home`, the tracker most recently updated will be used.
 2. If there are trackers of type `gps`, then the most recently updated tracker will be used.
@@ -44,7 +44,8 @@ If you have administrator rights, you can add other persons to Home Assistant an
    - They cannot have their own dashboard, for example.
    - But they can still be used for device tracking and show up on a map and be used in automations.
 5. If they are able to log in, fill in the user information.
-   - Check if the user name is correct. A suggestion is made based on the person name. But they do not have to be identical.
+   - Check if the username is correct. A suggestion is made based on the person name. But they do not have to be identical.
+     - The username must be lowercase and contain no spaces.
      - The username is required to log in.
      - The person name is the name displayed in the UI.
    - Enter a password and store it in a safe location.

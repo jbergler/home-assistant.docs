@@ -12,10 +12,10 @@ ha_domain: nzbget
 ha_platforms:
   - sensor
   - switch
-ha_integration_type: integration
+ha_integration_type: service
 ---
 
-The NZBGet integration allows you to monitor and control your downloads with [NZBGet](https://nzbget.net/) from within Home Assistant. It also allows you to setup automation based on the information.
+The **NZBGet** {% term integration %} allows you to monitor and control your downloads with [NZBGet](https://nzbget.net/) from within Home Assistant. It also allows you to setup automation based on the information.
 
 {% include integrations/config_flow.md %}
 
@@ -51,16 +51,16 @@ Example automation to send a Telegram message on a completed download:
 
 ```yaml
 - alias: "Completed Torrent"
-  trigger:
-    platform: event
-    event_type: nzbget_download_complete
-  - event_data:
-    category: tv
-  action:
-    action: notify.telegram_notifier
-    data:
-      title: "Download completed!"
-      message: "{{trigger.event.data.name}}"
+  triggers:
+    - trigger: event
+      event_type: nzbget_download_complete
+      event_data:
+        category: tv
+  actions:
+    - action: notify.telegram_notifier
+      data:
+        title: "Download completed!"
+        message: "{{trigger.event.data.name}}"
 ```
 
 {% endraw %}
@@ -73,7 +73,9 @@ Available actions:
 - `resume`: Resume the download queue.
 - `set_speed`: Set the download queue speed limit.
 
-### Action `nzbget/set_speed`
+### Action: Set speed
+
+The `nzbget.set_speed` action sets the download queue speed limit.
 
 | Data attribute | Optional | Description                                                                                     |
 | ---------------------- | -------- | ----------------------------------------------------------------------------------------------- |

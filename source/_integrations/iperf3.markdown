@@ -15,9 +15,10 @@ ha_integration_type: integration
 related:
   - docs: /docs/configuration/
     title: Configuration file
+ha_quality_scale: legacy
 ---
 
-The `iperf3` sensor {% term integration %} allows you to measure network bandwidth performance against a private or public [Iperf3](https://software.es.net/iperf/index.html) server.
+The **Iperf3** {% term integration %} allows you to measure network bandwidth performance against a private or public [Iperf3](https://software.es.net/iperf/index.html) server.
 
 Enabling this {% term integration %} will automatically create the Iperf3 sensors for the monitored conditions (below). By default, it will run every hour. The user can change the update frequency in the configuration by defining the `scan_interval` for a Iperf3 test to run.
 
@@ -118,7 +119,8 @@ You can use the `sensor.iperf3_update` action to trigger a manual speed test for
 Once loaded, the `iperf3` integration will expose an action (`iperf3.speedtest`) that can be called to run a speed test on demand. This can be useful if you have enabled manual mode.
 
 | Data attribute | Description |
-| `host` | String that point at a configured `host` from `configuration.yaml`. Otherwise, tests will be run against all configured hosts.
+| --- | --- |
+| `host` | String that point at a configured `host` from `configuration.yaml`. Otherwise, tests will be run against all configured hosts. |
 
 Example action data:
 

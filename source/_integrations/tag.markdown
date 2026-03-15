@@ -5,11 +5,10 @@ ha_category:
   - Automation
 ha_release: 0.115
 ha_codeowners:
-  - '@balloob'
-  - '@dmulcahey'
+  - '@home-assistant/core'
 ha_domain: tag
 ha_quality_scale: internal
-ha_integration_type: integration
+ha_integration_type: entity
 ---
 
 <p class='img'>
@@ -23,7 +22,7 @@ To make tags accessible to anyone in your house hold, there is also a [standalon
 
 ## Writing your first tag
 
-The easiest way to get started with tags is to use NFC tags ([stickers](https://amzn.to/3bQU0nN), [cards](https://amzn.to/2RlqPzM)) with the official Home Assistant mobile apps. Once you have written a card, hover it with your phone to scan it.
+The easiest way to get started with tags is to use NFC tags ([stickers](https://www.amazon.com/dp/B07N38MMTT), [cards](https://www.amazon.com/dp/B074M9J5L3)) with the official Home Assistant mobile apps. Once you have written a card, hover it with your phone to scan it.
 
 <lite-youtube videoid="Xc120lClUgA" videotitle="Writing a tag (iOS)" posterquality="maxresdefault"></lite-youtube>
 
@@ -58,9 +57,7 @@ One of the most fun applications of tags is to pick music in your living room. T
 
 ```yaml
 automation:
-- id: handle_tag_scan
-  alias: "Handle Tag Scan"
-  mode: single
+- alias: "Handle Tag Scan"
   # Hide warnings when triggered while in delay.
   max_exceeded: silent
   variables:
@@ -75,14 +72,14 @@ automation:
       04-B1-C6-62-2F-64-80:
         media_content_id: spotify:playlist:0OtWh3u6fZrBJTQtVBQWge
         media_content_type: playlist
-  trigger:
-    platform: event
-    event_type: tag_scanned
-  condition:
+  triggers:
+    - trigger: event
+      event_type: tag_scanned
+  conditions:
     # Test that we support this device and tag
     - "{{ trigger.event.data.tag_id in tags }}"
     - "{{ trigger.event.data.device_id in media_players }}"
-  action:
+  actions:
     - variables:
         media_player_entity_id: "{{ media_players[trigger.event.data.device_id] }}"
         media_content_id: "{{ tags[trigger.event.data.tag_id].media_content_id }}"
@@ -103,13 +100,13 @@ Then scan a tag on the reader and note down the `device_id` from the `data` sect
 
 ## Printing tags
 
-NFC tags come in many different shapes and formats. [NFC Stickers](https://amzn.to/3bQU0nN) are great to make existing objects scannable, like books or photos. But another fun use case is to get printable NFC cards. The great thing about these cards is that they are very accessible. Kids as young as 1 year old will be able to use it.
+NFC tags come in many different shapes and formats. [NFC Stickers](https://www.amazon.com/dp/B07N38MMTT) are great to make existing objects scannable, like books or photos. But another fun use case is to get printable NFC cards. The great thing about these cards is that they are very accessible. Kids as young as 1 year old will be able to use it.
 
 To get started with printing cards, you need the following hardware:
 
 - [Canon TS702a Inkjet Printer](https://www.amazon.com/TS702a-Compact-Connected-Inkjet-Printer/dp/B09TG8F4YS/)
-- [Compatible card printing tray](https://amzn.to/3hq59x2)
-- [Printable NFC cards](https://amzn.to/3iqHpKx)
+- [Compatible card printing tray](https://www.amazon.com/dp/B07T28MXMK)
+- [Printable NFC cards](https://www.amazon.com/dp/B072FK4RZD)
 
 The seller of above tray + cards also made an [ID card printing app](https://brainstormidsupply.com/try-id-maker/) available to prepare printable PDFs. It runs fully in your browser and no data is sent to their server. If you've used above equipment, pick Canon MP tray as what you're printing on.
 

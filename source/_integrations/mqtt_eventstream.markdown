@@ -10,9 +10,10 @@ ha_integration_type: integration
 related:
   - docs: /docs/configuration/
     title: Configuration file
+ha_quality_scale: legacy
 ---
 
-The `mqtt_eventstream` {% term integration %} connects two Home Assistant instances via MQTT.
+The **MQTT Eventstream** {% term integration %} connects two Home Assistant instances via MQTT.
 
 ## Configuration
 

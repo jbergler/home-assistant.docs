@@ -12,7 +12,7 @@ ha_domain: persistent_notification
 ha_integration_type: system
 ---
 
-The `persistent_notification` integration can be used to show a notification on the frontend that has to be dismissed by the user.
+The **Persistent Notification** {% term integration %} can be used to show a notification on the frontend that has to be dismissed by the user.
 
 <p class='img'>
   <img src='/images/screenshots/persistent-notification.png' />
@@ -30,8 +30,8 @@ An example of a persistent notification trigger in YAML:
 
 ```yaml
 automation:
-  - trigger:
-      - platform: persistent_notification
+  - triggers:
+      - trigger: persistent_notification
         # Optional. Possible values: added, removed, updated, current
         update_type:
           - added
@@ -43,24 +43,24 @@ automation:
 See [Automation Trigger Variables: Persistent Notification](/docs/automation/templating/#persistent-notification) 
 for additional trigger data available for conditions or actions.
 
-### Action
+### Action: Create
 
-The `persistent_notification.create` action takes in `message`, `title`, and `notification_id`.
+The `persistent_notification.create` action creates a persistent notification with a message, title, and notification ID.
 
 | Data attribute | Optional | Description |
 | ---------------------- | -------- | ----------- |
-| `message`              |       no | Body of the notification. Accepts [templates](/docs/configuration/templating/).
-| `title`                |      yes | Title of the notification. Accepts [templates](/docs/configuration/templating/).
-| `notification_id`      |      yes | If `notification_id` is given, it will overwrite the notification if there already was a notification with that ID.
+| `message`              |       no | Body of the notification. |
+| `title`                |      yes | Title of the notification. |
+| `notification_id`      |      yes | If `notification_id` is given, it will overwrite the notification if there already was a notification with that ID. |
 
 Here is how an [action](/docs/automation/action) of your [automation setup](/getting-started/automation/) with static content could look like.
 
 ```yaml
-action:
-  action: persistent_notification.create
-  data:
-    message: "Your message goes here"
-    title: "Custom subject"
+actions:
+  - action: persistent_notification.create
+    data:
+      message: "Your message goes here"
+      title: "Custom subject"
 ```
 
 If you want to show some runtime information, you have to use [templates](/docs/configuration/templating/).
@@ -68,12 +68,12 @@ If you want to show some runtime information, you have to use [templates](/docs/
 {% raw %}
 
 ```yaml
-action:
-  action: persistent_notification.create
-  data:
-    title: >
-      Thermostat is {{ state_attr('climate.thermostat', 'hvac_action') }}
-    message: "Temperature {{ state_attr('climate.thermostat', 'current_temperature') }}"
+actions:
+  - action: persistent_notification.create
+    data:
+      title: >
+        Thermostat is {{ state_attr('climate.thermostat', 'hvac_action') }}
+      message: "Temperature {{ state_attr('climate.thermostat', 'current_temperature') }}"
 ```
 
 {% endraw %}
@@ -87,17 +87,17 @@ The `persistent_notification.dismiss` action requires a `notification_id`.
 This action allows you to remove a notifications by script or automation.
 
 ```yaml
-action:
-  action: persistent_notification.dismiss
-  data:
-    notification_id: "1234"
+actions:
+  - action: persistent_notification.dismiss
+    data:
+      notification_id: "1234"
 ```
 
 The `persistent_notification.dismiss_all` action allows you to remove all notifications.
 
 ```yaml
-action:
-  action: persistent_notification.dismiss_all
+actions:
+  - action: persistent_notification.dismiss_all
 ```
 
 ### Markdown support
@@ -120,7 +120,7 @@ The message attribute supports the [Markdown formatting syntax](https://daringfi
 
 ### Create a persistent notification
 
-Choose the **{% my developer_services title="Actions" %}** tab from the **Developer Tools** sidebar item, then select the {% my developer_services service="persistent_notification.create" title="`persistent_notification.create`" %} action from the **Action** dropdown. Enter something like the sample below into the **data** field and press the **Perform action** button.
+Go to {% my developer_services title="**Settings** > **Developer tools** > **Actions**" %}, then select the {% my developer_services service="persistent_notification.create" title="`persistent_notification.create`" %} action from the **Action** dropdown. Enter something like the sample below into the **data** field and press the **Perform action** button.
 
 ```json
 {

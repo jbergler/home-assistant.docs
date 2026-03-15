@@ -20,17 +20,6 @@ device or service. This can be any update, including update of a firmware
 for a device like a light bulb or router, or software updates for things like
 add-ons or containers.
 
-The state of the update {% term entity %} indicates if there is an update pending or not,
-and if there is an update available, more information on that update can be
-provided by an integration to the {% term entity %}. For example, the version that is
-available, a summary of the release notes, and even links that provide more
-information on the available update.
-
-Lastly, there are two actions available for the update {% term entity %}. If possible and
-made available by the integration providing the update {% term entity %}, triggering
-the actual update from Home Assistant. The other action exposed allows for
-skipping the offered update.
-
 {% include integrations/building_block_integration.md %}
 
 For a list of {% term integrations %} offering update entities, on the integrations page, select the ["Update" category](/integrations/#update).
@@ -38,10 +27,15 @@ For a list of {% term integrations %} offering update entities, on the integrati
 ## The state of an update entity
 
 The state of an update {% term entity %} reflects whether an update is available or not.
-When the state is `on`, it means there is an update available; when everything
-is up-to-date, the state is `off`.
+When the state is **On**, it means there is an update available; when everything
+is up-to-date, the state is **Off**.
 
-Additionally, the following state attributes are exposed to provide more
+In addition, the entity can have the following states:
+
+- **Unavailable**: The entity is currently unavailable.
+- **Unknown**: The state is not yet known.
+
+The following state attributes are exposed to provide more
 information on the update state:
 
 - `title`: The title/name of the available software or firmware. As the device
@@ -69,10 +63,9 @@ The following device classes are supported for update entities:
 The update {% term entity %} exposes two actions that can be used to install or skip
 an offered software update.
 
-### Action {% my developer_call_service service="update.install" %}
+### Action: Install
 
-The {% my developer_call_service service="update.install" %} action can be used
-to install an offered update to the device or service.
+The `update.install` action can be used to install an offered update to the device or service.
 
 This action is only available for an update {% term entity %} if an {% term integration %} provides
 this capability. Additionally, if allowed by the {% term integration %}, the action
@@ -99,10 +92,9 @@ target:
     - update.my_light_bulb
 ```
 
-### Action {% my developer_call_service service="update.skip" %}
+### Action: Skip
 
-The {% my developer_call_service service="update.skip" %} action can be used
-to skip an offered update to the device or service.
+The `update.skip` action can be used to skip an offered update to the device or service.
 
 After skipping an offered update, the {% term entity %} will return to the `off` state,
 which means there is no update available.
@@ -118,11 +110,9 @@ Even if an update is skipped and shows as `off` (meaning no update), if there
 is a newer version available, calling the `update.install` action on the entity
 will still install the latest version.
 
-### Action {% my developer_call_service service="update.clear_skipped" %}
+### Action: Clear skipped
 
-The {% my developer_call_service service="update.clear_skipped" %} action can
-be used to remove skipped version marker of a previously skipped an offered
-update to the device or service.
+The `update.clear_skipped` action can be used to remove the skipped version marker of a previously skipped offered update to the device or service.
 
 After skipping an offered update, the {% term entity %} will return to the `off` state,
 but will not return to it until a newer version becomes available again.
@@ -153,14 +143,14 @@ the update for a light bulb becomes available.
 ```yaml
 automation:
   - alias: "Send notification when update available"
-    trigger:
-      platform: state
-      entity_id: update.my_light_bulb
-      to: "on"
-    action:
-      alias: "Send notification to my phone about the update"
-      action: notify.iphone
-      data:
-        title: "New update available"
-        message: "New update available for my_light_bulb!"
+    triggers:
+      - trigger: state
+        entity_id: update.my_light_bulb
+        to: "on"
+    actions:
+      - alias: "Send notification to my phone about the update"
+        action: notify.iphone
+        data:
+          title: "New update available"
+          message: "New update available for my_light_bulb!"
 ```

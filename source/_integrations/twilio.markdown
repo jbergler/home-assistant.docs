@@ -7,10 +7,10 @@ ha_release: '0.40'
 ha_config_flow: true
 ha_domain: twilio
 ha_iot_class: Cloud Push
-ha_integration_type: integration
+ha_integration_type: service
 ---
 
-The `twilio` integration enables the sending of notifications via SMS and the creation of calls with [Twilio](https://twilio.com).
+The **Twilio** {% term integration %} enables the sending of notifications via SMS and the creation of calls with [Twilio](https://twilio.com).
 
 A free trial account is available at [Twilio](https://twilio.com) website providing free calls to verified phone numbers.
 Calls are limited to 10 minutes and will play a short trial message before your message runs. Upgraded accounts have no limitation.
@@ -56,18 +56,18 @@ Here is an example:
 
 ```yaml
 automation:
-  trigger:
-    platform: event
-    event_type: twilio_data_received
-    event_data:
-      From: '+1XXXXXXXXXXX'
-      To: '+1YYYYYYYYYYY'
-      CallStatus: ringing
-      Direction: inbound
-  action:
-    action: cover.open_cover
-    target:
-      entity_id: cover.garage_door
+  triggers:
+    - trigger: event
+      event_type: twilio_data_received
+      event_data:
+        From: '+1XXXXXXXXXXX'
+        To: '+1YYYYYYYYYYY'
+        CallStatus: ringing
+        Direction: inbound
+  actions:
+    - action: cover.open_cover
+      target:
+        entity_id: cover.garage_door
 ```
 
 The above opens the garage door when the number `+1XXXXXXXXXXX` calls `+1YYYYYYYYYYY` (considering that `+1YYYYYYYYYYY` is one of your numbers registered in Twilio).
@@ -76,11 +76,11 @@ An example of an SMS handler:
 
 {% raw %}
 ```yaml
-alias: Twilio incoming
-trigger:
-  - platform: event
+alias: "Twilio incoming"
+triggers:
+  - trigger: event
     event_type: twilio_data_received
-action:
+actions:
   - variables:
       sender: |
         {{ trigger.event.data.From }}

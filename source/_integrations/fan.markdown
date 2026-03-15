@@ -11,9 +11,18 @@ ha_codeowners:
 ha_integration_type: entity
 ---
 
-The fan integration allows you to control and monitor fan devices.
+The **Fan** {% term integration %} allows you to control and monitor fan devices.
 
 {% include integrations/building_block_integration.md %}
+
+## The state of a fan entity
+
+The state of a fan entity can be either **On** or **Off**.
+
+In addition, the entity can have the following states:
+
+- **Unavailable**: The entity is currently unavailable.
+- **Unknown**: The state is not yet known.
 
 ## Actions
 
@@ -24,13 +33,13 @@ Available actions:
 
 {% note %}
 
-Not all fan actions may be available for your platform. You can check which actions are available for your fan(s) under **Developer Tools** > **Actions**.
+Not all fan actions may be available for your platform. You can check which actions are available for your fan(s) under {% my developer_services title="**Settings** > **Developer tools** > **Actions**" %}.
 
 {% endnote %}
 
-### Action `fan.set_percentage`
+### Action: Set percentage
 
-Sets the speed percentage for fan device.
+The `fan.set_percentage` action allows you to set the speed percentage for a fan device.
 
 | Data attribute | Optional | Description |
 | ---------------------- | -------- | ----------- |
@@ -41,10 +50,10 @@ Sets the speed percentage for fan device.
 
 ```yaml
 automation:
-  trigger:
-    platform: time
-    at: "07:15:00"
-  action:
+  triggers:
+    - trigger: time
+      at: "07:15:00"
+  actions:
     - action: fan.set_percentage
       target:
         entity_id: fan.kitchen
@@ -52,9 +61,9 @@ automation:
         percentage: 33
 ```
 
-### Action `fan.set_preset_mode`
+### Action: Set preset mode
 
-Sets a preset mode for the fan device. Available preset modes are defined by the integration that supplies the fan entity to Home Assistant. For example, the ESPHome [Speed Fan](https://esphome.io/components/fan/speed.html) component provides three available presets by default: `Low`, `Medium`, and `High`.
+The `fan.set_preset_mode` action allows you to set a preset mode for a fan device. Available preset modes are defined by the integration that supplies the fan entity to Home Assistant. For example, the ESPHome [Speed Fan](https://esphome.io/components/fan/speed/) component provides three available presets by default: `Low`, `Medium`, and `High`.
 
 | Data attribute | Optional | Description |
 | ---------------------- | -------- | ----------- |
@@ -65,10 +74,10 @@ Sets a preset mode for the fan device. Available preset modes are defined by the
 
 ```yaml
 automation:
-  trigger:
-    platform: time
-    at: "07:15:00"
-  action:
+  triggers:
+    - trigger: time
+      at: "07:15:00"
+  actions:
     - action: fan.set_preset_mode
       target:
         entity_id: fan.kitchen
@@ -76,9 +85,9 @@ automation:
         preset_mode: auto
 ```
 
-### Action `fan.set_direction`
+### Action: Set direction
 
-Sets the rotation for fan device.
+The `fan.set_direction` action allows you to set the rotation for a fan device.
 
 | Data attribute | Optional | Description |
 | ---------------------- | -------- | ----------- |
@@ -89,10 +98,10 @@ Sets the rotation for fan device.
 
 ```yaml
 automation:
-  trigger:
-    platform: time
-    at: "07:15:00"
-  action:
+  triggers:
+    - trigger: time
+      at: "07:15:00"
+  actions:
     - action: fan.set_direction
       target:
         entity_id: fan.kitchen
@@ -100,9 +109,9 @@ automation:
         direction: forward
 ```
 
-### Action `fan.oscillate`
+### Action: Oscillate
 
-Sets the oscillation for fan device.
+The `fan.oscillate` action allows you to set the oscillation for a fan device.
 
 | Data attribute | Optional | Description |
 | ---------------------- | -------- | ----------- |
@@ -113,10 +122,10 @@ Sets the oscillation for fan device.
 
 ```yaml
 automation:
-  trigger:
-    platform: time
-    at: "07:15:00"
-  action:
+  triggers:
+    - trigger: time
+      at: "07:15:00"
+  actions:
     - action: fan.oscillate
       target:
         entity_id: fan.kitchen
@@ -124,9 +133,9 @@ automation:
         oscillating: True
 ```
 
-### Action `fan.turn_on`
+### Action: Turn on
 
-Turn fan device on. This is only supported if the fan device supports being turned off. See a similar example under `fan.turn_off`.
+The `fan.turn_on` action allows you to turn a fan device on. This is only supported if the fan device supports being turned off. See a similar example under `fan.turn_off`.
 
 | Data attribute | Optional | Description |
 | ---------------------- | -------- | ----------- |
@@ -134,9 +143,9 @@ Turn fan device on. This is only supported if the fan device supports being turn
 | `percentage` | yes | Percentage speed setting
 | `preset_mode` | yes | The preset mode
 
-### Action `fan.turn_off`
+### Action: Turn off
 
-Turn fan device off. This is only supported if the fan device supports being turned on.
+The `fan.turn_off` action allows you to turn a fan device off. This is only supported if the fan device supports being turned on.
 
 | Data attribute | Optional | Description |
 | ---------------------- | -------- | ----------- |
@@ -147,10 +156,10 @@ Turn fan device off. This is only supported if the fan device supports being tur
 
 ```yaml
 automation:
-  trigger:
-    platform: time
-    at: "07:15:00"
-  action:
+  triggers:
+    - trigger: time
+      at: "07:15:00"
+  actions:
     - action: fan.turn_off
       target:
         entity_id: fan.kitchen
@@ -171,13 +180,13 @@ Increases the speed of the fan device.
 
 ```yaml
 automation:
-  trigger:
-  - platform: device
+  triggers:
+  - trigger: device
     device_id: 097cd9f706a86e9163acb64ba7d630da
     domain: lutron_caseta
     type: press
     subtype: raise
-  action:
+  actions:
   - action: fan.increase_speed
     target:
       entity_id: fan.dining_room_fan_by_front_door
@@ -196,13 +205,13 @@ Decreases the speed of the fan device.
 
 ```yaml
 automation:
-  trigger:
-  - platform: device
+  triggers:
+  - trigger: device
     device_id: 097cd9f706a86e9163acb64ba7d630da
     domain: lutron_caseta
     type: press
     subtype: lower
-  action:
+  actions:
   - action: fan.decrease_speed
     target:
       entity_id: fan.dining_room_fan_by_front_door

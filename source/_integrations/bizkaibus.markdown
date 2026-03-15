@@ -15,9 +15,10 @@ ha_integration_type: integration
 related:
   - docs: /docs/configuration/
     title: Configuration file
+ha_quality_scale: legacy
 ---
 
-The `bizkaibus` sensor will give you the time until the next bus in the selected stop.
+The **Bizkaibus** {% term integration %} will give you the time until the next bus in the selected stop.
 
 The next website can help to determine the id of your bus stop. You can check if this is correct by going to [next link](https://apli.bizkaia.net/APPS/DANOK/TQ/DATOS_PARADAS/DATOS_Paradas.xml) and look the PR_CODE for the STOP_ID.
 

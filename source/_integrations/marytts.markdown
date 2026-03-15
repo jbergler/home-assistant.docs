@@ -12,9 +12,10 @@ ha_integration_type: integration
 related:
   - docs: /docs/configuration/
     title: Configuration file
+ha_quality_scale: legacy
 ---
 
-The `marytts` text-to-speech {% term integration %} uses [MaryTTS](https://marytts.github.io/) text-to-speech engine to read a text with natural sounding voices.
+The **MaryTTS** {% term integration %} uses [MaryTTS](https://marytts.github.io/) text-to-speech engine to read a text with natural sounding voices.
 
 ## Configuration
 

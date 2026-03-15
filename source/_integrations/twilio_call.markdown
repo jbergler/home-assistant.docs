@@ -9,9 +9,10 @@ ha_iot_class: Cloud Push
 ha_platforms:
   - notify
 ha_integration_type: integration
+ha_quality_scale: legacy
 ---
 
-The `twilio_call` notification platform enables sending notifications via Voice, powered by [Twilio](https://twilio.com).
+The **Twilio Call** {% term integration %} enables sending notifications via Voice, powered by [Twilio](https://twilio.com).
 Passed message will be read by Text-to-speech service.
 
 The requirement is that you have setup [Twilio](/integrations/twilio/).
@@ -48,14 +49,14 @@ Twilio is a notification platform and thus can be controlled by calling the noti
 # Example automation notification entry
 automation:
   - alias: "The sun has set"
-    trigger:
-      platform: sun
-      event: sunset
-    action:
-      action: notify.twilio_call
-      data:
-        message: "The sun has set"
-        target:
-          - +14151234567
-          - +15105555555
+    triggers:
+      - trigger: sun
+        event: sunset
+    actions:
+      - action: notify.twilio_call
+        data:
+          message: "The sun has set"
+          target:
+            - +14151234567
+            - +15105555555
 ```

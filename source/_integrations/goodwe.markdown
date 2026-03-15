@@ -17,10 +17,10 @@ ha_platforms:
   - number
   - select
   - sensor
-ha_integration_type: integration
+ha_integration_type: device
 ---
 
-The GoodWe integration will poll a [GoodWe](http://www.goodwe.com/) solar inverter over the local network and present its runtime values as sensors in Home Assistant.
+The **GoodWe** {% term integration %} will poll a [GoodWe](http://www.goodwe.com/) solar inverter over the local network and present its runtime values as sensors in Home Assistant.
 
 It works with GoodWe ET, EH, BT, BH, ES, EM, DT, MS, D-NS, XS and BP families of inverters. Different inverter families/models expose different sets of sensors, the newer models have usually broader support.
 
@@ -45,12 +45,12 @@ The integration will poll the inverter for new values every 10 seconds. If you w
 
 ```yaml
 - alias: "Goodwe inverter data polling"
-  trigger:
-    - platform: time_pattern
+  triggers:
+    - trigger: time_pattern
       hours: "*"
       minutes: "*"
       seconds: "/30"
-  action:
+  actions:
     - action: homeassistant.update_entity
       target:
         entity_id: sensor.ppv

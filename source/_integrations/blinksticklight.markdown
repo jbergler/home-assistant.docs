@@ -12,9 +12,10 @@ ha_integration_type: integration
 related:
   - docs: /docs/configuration/
     title: Configuration file
+ha_quality_scale: legacy
 ---
 
-The `blinkstick` platform lets you control your [Blinkstick](https://www.blinkstick.com/) lights from within Home Assistant.
+The **BlinkStick** {% term integration %} lets you control your [Blinkstick](https://www.blinkstick.com/) lights from within Home Assistant.
 
 ## Setup
 

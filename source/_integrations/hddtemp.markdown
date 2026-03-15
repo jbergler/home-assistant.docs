@@ -12,9 +12,10 @@ ha_integration_type: integration
 related:
   - docs: /docs/configuration/
     title: Configuration file
+ha_quality_scale: legacy
 ---
 
-The `hddtemp` sensor {% term integration %} is using the data provided by [HDDTemp](https://savannah.nongnu.org/projects/hddtemp).
+The **hddtemp** {% term integration %} is using the data provided by [HDDTemp](https://savannah.nongnu.org/projects/hddtemp).
 
 ## Setup
 
@@ -23,10 +24,6 @@ It required that `hddtemp` is started or running in daemon mode on a local or re
 ```bash
 hddtemp -dF
 ```
-
-{% important %}
-You can't use this sensor in a container (only Home Assistant Core is supported) as it requires access to `hddtemp` which is not available in a container-based setup.
-{% endimportant %}
 
 ## Configuration
 

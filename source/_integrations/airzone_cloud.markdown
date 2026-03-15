@@ -7,6 +7,7 @@ ha_category:
   - Climate
   - Select
   - Sensor
+  - Switch
   - Water heater
 ha_iot_class: Cloud Push
 ha_config_flow: true
@@ -17,13 +18,14 @@ ha_platforms:
   - diagnostics
   - select
   - sensor
+  - switch
   - water_heater
 ha_codeowners:
   - '@Noltari'
-ha_integration_type: integration
+ha_integration_type: hub
 ---
 
-This integration interacts with the Cloud API of [Airzone devices](https://www.airzone.es/en/).
+This {% term integration %} interacts with the Cloud API of [Airzone devices](https://www.airzone.es/en/).
 
 There are two main types of Airzone devices:
 - [Aidoo](https://www.airzonecontrol.com/aa/en/control-solutions/aidoo/wi-fi/) / [Aidoo Pro](https://www.airzonecontrol.com/aa/en/control-solutions/aidoo/pro/)
@@ -108,6 +110,16 @@ For each Airzone WebServer (HVAC Wi-Fi controller), the following *sensors* are 
 | :------------------ | :------------------------------------------------- |
 | rssi                | Wi-Fi RSSI.                                        |
 
+## Switch
+
+For each Airzone zone (thermostat), a switch entity is created to turn the thermostat on or off (without changing the HVAC mode).
+
 ## Water heater
 
 For each Airzone device, a *water heater entity* is created if supported.
+
+## Removing the integration
+
+This integration follows standard integration removal. No extra steps are required.
+
+{% include integrations/remove_device_service.md %}

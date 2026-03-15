@@ -45,7 +45,7 @@ This is the default auth provider. The first user created is designated as the _
 
 User details are stored in the `[your config]/.storage`  directory. All passwords are stored hashed and with a salt, making it almost impossible for an attacker to figure out the password even if they have access to the file.
 
-Users can be managed in Home Assistant by the owner. Go to the configuration panel and click on _{% my users %}_.
+Users can be managed in Home Assistant by the owner. Select {% my users title="**Settings** > **People**" %} and open the **Users** tab.
 
 This is the entry in {% term "`configuration.yaml`" %} for Home Assistant auth:
 
@@ -123,11 +123,16 @@ homeassistant:
           - group: system-users
 ```
 
-First note, for `trusted_users` configuration you need to use `user id`, which you can find through {% my users title="Settings -> People" %} -> View User Detail. The `trusted_users` configuration will not validate the existence of the user, so please make sure you have put in the correct user id by yourself.
+First note, for `trusted_users` configuration you need to use `user id`.
 
-Second note, a trusted user with an IPv6 address must put the IPv6 address in quotes as shown.
+1. To find the user ID, in your browser, make sure the URL of your Home Assistant ends in `config/users/`.
+   - For example: `homeassistant:8123/config/users`.
+2. Select the user from the list, and copy the ID.
+   - For example: `acbbff56461748718f3650fb914b88c9`.
+3. The `trusted_users` configuration will not validate the existence of the user, so please make sure you have put in the correct user id.
+4. A trusted user with an IPv6 address must put the IPv6 address in quotes as shown.
 
-In above example, if user try to access Home Assistant from 192.168.0.1, they will have only one user available to choose. They will have two users available if access from 192.168.0.38 (from 192.168.0.0/24 network). If they access from 192.168.10.0/24 network, they can choose from all available users (non-system and active users).
+In the above example, if user try to access Home Assistant from 192.168.0.1, they will have only one user available to choose. They will have two users available if access from 192.168.0.38 (from 192.168.0.0/24 network). If they access from 192.168.10.0/24 network, they can choose from all available users (non-system and active users).
 
 Specially, you can use `group: GROUP_ID` to assign all users in certain `user group` to be available to choose. Group and users can be mix and match.
 
@@ -152,11 +157,16 @@ homeassistant:
 
 Assuming you have only the owner created though onboarding process, no other users ever created. The above example configuration will allow you directly access Home Assistant main page if you access from your internal network (192.168.0.0/24) or from localhost (127.0.0.1). If you get a login abort error, then you can change to use Home Assistant Authentication Provider to login, if you access your Home Assistant instance from outside network.
 
+{% note %}
+The order of `auth_providers` is critical as providers are evaluated top to bottom.
+To enable skip login as intended, the `trusted_networks` provider must be listed before the `homeassistant` provider. If `type: homeassistant` is configured first, Home Assistant will immediately present the login page and the skip login logic will never be reached, even if the client is on a trusted network.
+{% endnote %}
+
 ### Command line
 
 The command line auth provider executes a configurable shell command to perform user authentication. Two environment variables, `username` and `password`, are passed to the command. Access is granted when the command exits successfully (with exit code 0).
 
-This provider can be used to integrate Home Assistant with arbitrary external authentication services, from plaintext databases over LDAP to RADIUS. A compatible script for LDAP authentication is [this one](https://github.com/bob1de/ldap-auth-sh), for instance. Please note, this will only work when using the Home Assistant Core installation type.
+This provider can be used to integrate Home Assistant with arbitrary external authentication services, from plaintext databases over LDAP to RADIUS.
 
 Here is a configuration example:
 

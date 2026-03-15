@@ -12,7 +12,7 @@ ha_domain: input_select
 ha_integration_type: helper
 ---
 
-The **Input select** {% term integration %} allows the user to define a list of values that can be selected via the frontend and can be used within conditions of an automation. When a user selects a new item, a state transition event is generated. This state event can be used in an `automation` trigger.
+The **Input select** {% term integration %} allows you to define a list of values that can be selected via the frontend and can be used within conditions of an automation. When you select a new item, a state transition event is generated. This state event can be used in an `automation` trigger.
 
 The preferred way to configure an input select is via the user interface at **{% my helpers title="Settings > Devices & services > Helpers" %}**. Click the add button and then choose the **{% my config_flow_start domain="input_select" title="Dropdown" %}** option.
 
@@ -135,15 +135,15 @@ The following example shows the usage of the `input_select.select_option` action
 # Example configuration.yaml entry
 automation:
   - alias: "example automation"
-    trigger:
-      platform: event
-      event_type: MY_CUSTOM_EVENT
-    action:
+    triggers:
+      - trigger: event
+        event_type: MY_CUSTOM_EVENT
+    actions:
       - action: input_select.select_option
         target:
           entity_id: input_select.who_cooks
         data:
-          option: Paulus
+          option: "Paulus"
 ```
 
 To dynamically set the `input_select` options you can call `input_select.set_options` in an automation:
@@ -152,10 +152,10 @@ To dynamically set the `input_select` options you can call `input_select.set_opt
 # Example configuration.yaml entry
 automation:
   - alias: "example automation"
-    trigger:
-      platform: event
-      event_type: MY_CUSTOM_EVENT
-    action:
+    triggers:
+      - trigger: event
+        event_type: MY_CUSTOM_EVENT
+    actions:
       - action: input_select.set_options
         target:
           entity_id: input_select.who_cooks
@@ -185,29 +185,29 @@ input_select:
  # This automation script runs when a value is received via MQTT on retained topic: thermostatMode
  # It sets the value selector on the GUI. This selector also had its own automation when the value is changed.
 - alias: "Set Thermostat Mode Selector"
-  trigger:
-    platform: mqtt
-    topic: "thermostatMode"
+  triggers:
+    - trigger: mqtt
+      topic: "thermostatMode"
    # entity_id: input_select.thermostat_mode
-  action:
-    action: input_select.select_option
-    target:
-      entity_id: input_select.thermostat_mode
-    data:
-      option: "{{ trigger.payload }}"
+  actions:
+    - action: input_select.select_option
+      target:
+        entity_id: input_select.thermostat_mode
+      data:
+        option: "{{ trigger.payload }}"
 
  # This automation script runs when the thermostat mode selector is changed.
  # It publishes its value to the same MQTT topic it is also subscribed to.
 - alias: "Set Thermostat Mode"
-  trigger:
-    platform: state
-    entity_id: input_select.thermostat_mode
-  action:
-    action: mqtt.publish
-    data:
-      topic: "thermostatMode"
-      retain: true
-      payload: "{{ states('input_select.thermostat_mode') }}"
+  triggers:
+    - trigger: state
+      entity_id: input_select.thermostat_mode
+  actions:
+    - action: mqtt.publish
+      data:
+        topic: "thermostatMode"
+        retain: true
+        payload: "{{ states('input_select.thermostat_mode') }}"
 ```
 
 {% endraw %}

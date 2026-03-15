@@ -29,6 +29,7 @@ ha_integration_type: integration
 related:
   - docs: /docs/configuration/
     title: Configuration file
+ha_quality_scale: legacy
 ---
 
 The [Homematic](https://www.eq-3.com/products/homematic.html) {% term integration %} provides bi-directional communication with your CCU/Homegear. It uses an XML-RPC connection to set values on devices and subscribes to receive events the devices and the CCU emit.
@@ -94,7 +95,7 @@ Configuration variables (interface):
 
 {% configuration %}
 host:
-  description: IP address or hostname of CCU/Homegear device or Home Assistant add-on.
+  description: IP address or hostname of CCU/Homegear device or app for Home Assistant.
   required: true
   type: string
 port:
@@ -203,7 +204,7 @@ homematic:
 We use three approaches to fetch the names of devices. Each assumes you have properly named your devices in your existing Homematic setup. As a general advice: Use ASCII for your devices names. Home Assistant won't include non-ASCII characters in entity-names.
 
 1. `json`: The CCU allows to fetch details of the paired devices via JSON-RPC. For this to work, you need to add valid credentials to your integration configuration. Guest-access is sufficient to query for device names.
-2. `xml`: If you use a CCU, there is an add-on called the "XML-API". With it installed, you are able to fetch all kinds of information from you CCU using XML-RPC. We can leverage this and fetch the names of devices set within the CCU. We don't support authentication with this method. The `json` method should be preferred over `xml`. Support for the XML-API is only available for downwards compatibility and may be disabled in a future release.
+2. `xml`: If you use a CCU, there is a Home Assistant app called the "XML-API". With it installed, you are able to fetch all kinds of information from you CCU using XML-RPC. We can leverage this and fetch the names of devices set within the CCU. We don't support authentication with this method. The `json` method should be preferred over `xml`. Support for the XML-API is only available for downwards compatibility and may be disabled in a future release.
 3. `metadata`: Homegear provides device-names through the metadata devices internally have. When using an HM-CFG-LAN interface, you typically use a configuration software ("HomeMatic-Komponenten konfigurieren" is the name of the shortcut on your desktop by default) to pair and configure your devices. If you have paired devices, you'll see them listed in a table. The leftmost column (Name) is prefilled with default names. You can click such a name and enter whatever you like.
 
 Resolving names can take some time. So when you start Home Assistant you won't see you devices at first. For a setup with 20+ devices it can take up to a minute until all devices show up in the UI.
@@ -252,17 +253,17 @@ Here's an example of how to use these events for automations:
 
 ```yaml
 automation:
-   trigger:
-     platform: event
-     event_type: homematic.keypress
-     event_data:
-       name: "Kitchen Switch"
-       channel: 1
-       param: PRESS_SHORT
-   action:
-     action: switch.turn_on
-     target:
-       entity_id: switch.Kitchen_Ambience
+  triggers:
+    - trigger: event
+      event_type: homematic.keypress
+      event_data:
+        name: "Kitchen Switch"
+        channel: 1
+        param: PRESS_SHORT
+  actions:
+    - action: switch.turn_on
+      target:
+        entity_id: switch.Kitchen_Ambience
 ```
 
 The channel parameter is equal to the channel of the button you are configuring the automation for. You can view the available channels in the UI you use to pair your devices.
@@ -306,37 +307,37 @@ Simulate a button being pressed:
 
 ```yaml
 ...
-action:
-  action: homematic.virtualkey
-  data:
-    address: "BidCoS-RF"
-    channel: 1
-    param: PRESS_LONG
+actions:
+  - action: homematic.virtualkey
+    data:
+      address: "BidCoS-RF"
+      channel: 1
+      param: PRESS_LONG
 ```
 
 Open KeyMatic:
 
 ```yaml
 ...
-action:
-  action: homematic.virtualkey
-  data:
-    address: "LEQ1234567"
-    channel: 1
-    param: OPEN
+actions:
+  - action: homematic.virtualkey
+    data:
+      address: "LEQ1234567"
+      channel: 1
+      param: OPEN
 ```
 
 Set boolean variable to true:
 
 ```yaml
 ...
-action:
-  action: homematic.set_variable_value
-  target:
-    entity_id: homematic.ccu2
-  data:
-    name: "Variablename"
-    value: true
+actions:
+  - action: homematic.set_variable_value
+    target:
+      entity_id: homematic.ccu2
+    data:
+      name: "Variablename"
+      value: true
 ```
 
 #### Advanced examples
@@ -348,69 +349,69 @@ Manually turn on a switch actor:
 
 ```yaml
 ...
-action:
-  action: homematic.set_device_value
-  data:
-    address: "LEQ1234567"
-    channel: 1
-    param: STATE
-    value: true
+actions:
+  - action: homematic.set_device_value
+    data:
+      address: "LEQ1234567"
+      channel: 1
+      param: STATE
+      value: true
 ```
 
 Manually set temperature on thermostat:
 
 ```yaml
 ...
-action:
-  action: homematic.set_device_value
-  data:
-    address: "LEQ1234567"
-    channel: 4
-    param: SET_TEMPERATURE
-    value: 23.0
+actions:
+  - action: homematic.set_device_value
+    data:
+      address: "LEQ1234567"
+      channel: 4
+      param: SET_TEMPERATURE
+      value: 23.0
 ```
 
 Manually set the active profile on thermostat:
 
 ```yaml
 ...
-action:
-  action: homematic.set_device_value
-  data:
-    address: "LEQ1234567"
-    channel: 1
-    param: ACTIVE_PROFILE
-    value: 1
-    value_type: int
+actions:
+  - action: homematic.set_device_value
+    data:
+      address: "LEQ1234567"
+      channel: 1
+      param: ACTIVE_PROFILE
+      value: 1
+      value_type: int
 ```
 
 Set the week program of a wall thermostat:
 
 ```yaml
 ...
-action:
-  action: homematic.put_paramset
-  data:
-    interface: wireless
-    address: "LEQ1234567"
-    paramset_key: MASTER
-    paramset:
-      WEEK_PROGRAM_POINTER: 1
+actions:
+  - action: homematic.put_paramset
+    data:
+      interface: wireless
+      address: "LEQ1234567"
+      paramset_key: MASTER
+      paramset:
+        WEEK_PROGRAM_POINTER: 1
 ```
 
 Set the week program of a wall thermostat with explicit `rx_mode` (BidCos-RF only):
 
 ```yaml
 ...
-action:
-  action: homematic.put_paramset
-  data:
-    interface: wireless
-    address: "LEQ1234567"
-    paramset_key: MASTER
-    rx_mode: WAKEUP
-    paramset:
-      WEEK_PROGRAM_POINTER: 1
+actions:
+  - action: homematic.put_paramset
+    data:
+      interface: wireless
+      address: "LEQ1234567"
+      paramset_key: MASTER
+      rx_mode: WAKEUP
+      paramset:
+        WEEK_PROGRAM_POINTER: 1
 ```
 
 BidCos-RF devices have an optional parameter for put_paramset which defines the way the configuration data is sent to the device.
@@ -423,20 +424,20 @@ Manually set lock on KeyMatic devices:
 
 ```yaml
 ...
-action:
-  action: lock.lock
-  target:
-    entity_id: lock.leq1234567
+actions:
+  - action: lock.lock
+    target:
+      entity_id: lock.leq1234567
 ```
 
 Manually set unlock on KeyMatic devices:
 
 ```yaml
 ...
-action:
-  action: lock.unlock
-  target:
-    entity_id: lock.leq1234567
+actions:
+  - action: lock.unlock
+    target:
+      entity_id: lock.leq1234567
 ```
 
 
@@ -488,13 +489,13 @@ template:
 
 automation:
   - alias: "Homematic Reconnect"
-    trigger:
-      platform: state
-      entity_id: binary_sensor.homematic_is_sending_updates
-      to: "off"
-    action:
+    triggers:
+      - trigger: state
+        entity_id: binary_sensor.homematic_is_sending_updates
+        to: "off"
+    actions:
       # Reconnect, if sensor has not been updated for over 10 minutes
-      action: homematic.reconnect
+      - action: homematic.reconnect
 ```
 
 {% endraw %}
@@ -534,11 +535,11 @@ automation:
      ```yaml
      automation:
        - alias: "Homematic CCU Reboot"
-         trigger:
-           platform: state
-           entity_id: sensor.v_last_reboot
-         action:
-           action: homematic.reconnect
+         triggers:
+           - trigger: state
+             entity_id: sensor.v_last_reboot
+         actions:
+           - action: homematic.reconnect
      ```
 
 ## Notifications

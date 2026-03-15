@@ -22,19 +22,19 @@ ha_platforms:
   - lock
   - sensor
   - switch
-ha_integration_type: integration
+ha_integration_type: hub
 ---
 
-The `starline` integration lets you retrieve data of your [StarLine](https://www.alarmstarline.com/) security system from the [StarLine portal](https://my.starline.ru/). You will need a working StarLine account.
+The **StarLine** {% term integration %} lets you retrieve data of your [StarLine](https://www.alarmstarline.com/) security system from the [StarLine portal](https://my.starline.ru/). You will need a working StarLine account.
 
 This integration provides the following platforms:
 
-- Binary sensors: Hand brake, hood, trunk, alarm status, doors lock state, handsfree, neutral and moving ban status.
+- Binary sensors: Hand brake, hood, trunk, alarm status, doors lock state, handsfree, neutral, moving ban status, ignition state, and autostart state.
 - Device tracker: The location of your car.
 - Lock: Control the lock of your car.
 - Sensors: Battery level, SIM card balance, GSM signal level, GPS satellites count, fuel volume, mileage, OBD errors, interior temperature and engine temperature.
 - Switches: Start/stop engine, heater (webasto), additional channel, and service mode.
-- Buttons: Sound the horn.
+- Buttons: Sound the horn, flex logic, and panic mode.
 - Actions: Update the state, set update frequency. More details can be found [here](#actions).
 
 ## Prerequisites

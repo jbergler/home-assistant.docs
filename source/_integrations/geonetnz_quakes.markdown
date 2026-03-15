@@ -6,17 +6,17 @@ ha_category:
 ha_iot_class: Cloud Polling
 ha_release: 0.98
 ha_config_flow: true
-ha_quality_scale: platinum
 ha_codeowners:
   - '@exxamalte'
 ha_domain: geonetnz_quakes
 ha_platforms:
+  - diagnostics
   - geo_location
   - sensor
 ha_integration_type: service
 ---
 
-The `geonetnz_quakes` integration lets you use a GeoJSON feed provided by 
+The **GeoNet NZ Quakes** {% term integration %} lets you use a GeoJSON feed provided by 
 New Zealand's [GeoNet](https://www.geonet.org.nz/) with information 
 about quakes in the New Zealand region that happened within the last 7 days. 
 It retrieves incidents from a feed and 

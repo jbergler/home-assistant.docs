@@ -23,7 +23,7 @@ ha_platforms:
   - light
   - lock
   - switch
-ha_integration_type: integration
+ha_integration_type: hub
 ha_dhcp: true
 ---
 
@@ -31,7 +31,7 @@ ha_dhcp: true
 The Insteon apps (Director or Insteon for Hub) are a paid service utilizing the Insteon cloud to control an Insteon Hub. Home Assistant does not require the use of the Insteon app but can operate in conjunction with the app if desired.
 {% endimportant %}
 
-This integration adds support for integrating your Insteon network with Home Assistant. It has been tested with all USB and serial PowerLinc Modems (PLM) including [2413U], [2448A7], [2413S] and [2412S] models. It has also been tested to work with the [2242] and [2245] Hubs.
+This {% term integration %} adds support for integrating your Insteon network with Home Assistant. It has been tested with all USB and serial PowerLinc Modems (PLM) including [2413U], [2448A7], [2413S] and [2412S] models. It has also been tested to work with the [2242] and [2245] Hubs.
 
 _If you have factory reset your device, please see the instructions [Recovering After Factory Resetting The Hub](#recovering-after-factory-resetting-the-hub) for how to proceed._
 
@@ -132,9 +132,8 @@ Triggering an Insteon scene on or off is done via automations. Two actions are p
 ```yaml
 automation:
   # Trigger an Insteon scene 25
-  - id: trigger_scene_25_on
-    alias: "Turn on scene 25"
-    action:
+  - alias: "Turn on scene 25"
+    actions:
       - action: insteon.scene_on
         group: 25
 ```
@@ -155,36 +154,34 @@ This allows the mini-remotes to be configured as triggers for automations. Here 
 ```yaml
 automation:
   # 4 or 8 button remote with button c pressed
-  - id: light_on
-    alias: "Turn a light on"
-    trigger:
-      - platform: event
+  - alias: "Turn a light on"
+    triggers:
+      - trigger: event
         event_type: insteon.button_on
     event_data:
       address: 1a2b3c
       button: c
-    condition:
+    conditions:
       - condition: state
         entity_id: light.some_light
         state: "off"
-    action:
+    actions:
       - action: light.turn_on
         target:
           entity_id: light.some_light
 
   # single button remote
-  - id: light_off
-    alias: "Turn a light off"
-    trigger:
-      - platform: event
+  - alias: "Turn a light off"
+    triggers:
+      - trigger: event
         event_type: insteon.button_on
     event_data:
       address: 1a2b3c
-    condition:
+    conditions:
       - condition: state
         entity_id: light.some_light
         state: "off"
-    action:
+    actions:
       - action: light.turn_on
         target:
           entity_id: light.some_light
